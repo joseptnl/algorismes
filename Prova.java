@@ -9,7 +9,7 @@ import prova.vista.Vista;
  *
  * @author usuario
  */
-// Hola martin como estás ??
+// Hola martin como estás ?? Mal
 public class Prova implements EventListener {
     
     private Model model;
