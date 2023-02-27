@@ -1,11 +1,11 @@
-package prova.control;
+package practica1.control;
 
 import java.util.Arrays;
 import java.util.Hashtable;
-import prova.Event;
-import prova.EventListener;
-import prova.Prova;
-import prova.model.Model;
+import practica1.Event;
+import practica1.EventListener;
+import practica1.Prova;
+import practica1.model.Model;
 
 /**
  *

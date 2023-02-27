@@ -1,7 +1,7 @@
-package prova.vista;
+package practica1.vista;
 
-import prova.Event;
-import prova.EventListener;
+import practica1.Event;
+import practica1.EventListener;
 
 /**
  *

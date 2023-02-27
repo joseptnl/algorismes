@@ -1,9 +1,9 @@
-package prova.model;
+package practica1.model;
 
 import java.util.Random;
-import prova.Event;
-import prova.EventListener;
-import prova.Prova;
+import practica1.Event;
+import practica1.EventListener;
+import practica1.Prova;
 
 /**
  *
