@@ -9,6 +9,7 @@ import prova.vista.Vista;
  *
  * @author usuario
  */
+// Hola martin como estás ??
 public class Prova implements EventListener {
     
     private Model model;
