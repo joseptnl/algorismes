@@ -1,15 +1,14 @@
-package prova;
+package practica1;
 
 import mesurament.Mesurament;
-import prova.control.Control;
-import prova.model.Model;
-import prova.vista.Vista;
+import practica1.control.Control;
+import practica1.model.Model;
+import practica1.vista.Vista;
 
 /**
  *
  * @author usuario
  */
-// Hola martin como estás ?? Mal
 public class Prova implements EventListener {
     
     private Model model;
