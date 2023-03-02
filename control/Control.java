@@ -12,12 +12,14 @@ import practica1.model.Model;
  *
  * @author usuario
  */
+
 public class Control extends Thread implements EventListener {
     
     private Prova prova;
     private int moda;
     private int repModa;
     private int resultA, resultB;
+
     private static boolean doHash = false, doArray = false;
     
     public Control(Prova prova) {
@@ -44,7 +46,7 @@ public class Control extends Thread implements EventListener {
     
     private void modaWithArray(long temps, int [] vector) {
         Arrays.sort(vector);
-        
+       
         moda = -1;
         repModa = 0;
         int currentNum = -1;
@@ -56,7 +58,7 @@ public class Control extends Thread implements EventListener {
             } else {
                 repeticions++;
             }
-            
+
             if (repeticions > repModa && currentNum != moda) {
                 moda = currentNum;
                 repModa = repeticions;
@@ -66,7 +68,7 @@ public class Control extends Thread implements EventListener {
         }
         temps = System.nanoTime() - temps;
         resultA = moda;
-        
+
         System.out.println("Per executar array he tardat\t"
                 + temps + " ns. Moda = " + resultA);
         
@@ -111,5 +113,5 @@ public class Control extends Thread implements EventListener {
         
         (new Thread(this)).start();
     }
-    
+
 }
