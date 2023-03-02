@@ -24,7 +24,7 @@ public class Prova implements EventListener {
     }
     
     private void init() {
-        model = new Model(100000, this);
+        model = new Model(10000, this);
         control = new Control(this);
         vista = new Vista(this);
     }

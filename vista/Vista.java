@@ -2,6 +2,7 @@ package practica1.vista;
 
 import practica1.Event;
 import practica1.EventListener;
+import practica1.EventType;
 import practica1.Prova;
 import practica1.control.ControlEvent;
 
@@ -162,9 +163,15 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     @Override
     public void notify(Event e) {
         VistaEvent event = (VistaEvent) e;
-        /*switch (event.type) {
-            
-        }*/
+        if (event.type == EventType.ARRAY) {
+            System.out.println("ARRAY - Iteration: "+event.iteration);
+        }
+        if (event.type == EventType.HASH) {
+            System.out.println("HASH - Iteration: "+event.iteration);
+        }
+        if (event.type == EventType.VECTORIAL) {
+            System.out.println("VECTORIAL - Iteration: "+event.iteration);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
