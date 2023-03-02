@@ -10,11 +10,13 @@ import practica1.EventType;
  */
 public class VistaEvent extends Event {
     public long time;
+    public int iteration;
     public EventType type;
     
-    public VistaEvent(long time, EventType typeOp) {
+    public VistaEvent(long time, EventType typeOp, int iteration) {
         super(EventOrigin.Vista);
         this.time = time;
         this.type = typeOp;
+        this.iteration = iteration;
     }
 }
