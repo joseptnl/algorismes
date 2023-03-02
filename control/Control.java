@@ -69,11 +69,6 @@ public class Control extends Thread implements EventListener {
 
         System.out.println("Per executar array he tardat\t"
                 + temps + " ns. Moda = " + resultA);
-        
-        //PRODUCTO VECTORIAL
-        int[] vector = {1, 2, 3, 4};
-        int[] resultado = productoVectorial(vector);
-        System.out.println(Arrays.toString(resultado));
 
     }
     
