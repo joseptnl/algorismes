@@ -6,19 +6,19 @@ package practica1;
  */
 public abstract class Event {
     
-    public enum EventType {
+    public enum EventOrigin {
         Model,
-        View,
+        Vista,
         Control
     }
     
-    private final EventType TYPE;
+    private final EventOrigin TYPE;
     
-    public Event(EventType type) {
+    public Event(EventOrigin type) {
         this.TYPE = type;
     }
     
-    public EventType getEventType() {
+    public EventOrigin getEventOrigin() {
         return TYPE;
     };
 }

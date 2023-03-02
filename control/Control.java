@@ -1,12 +1,14 @@
 package practica1.control;
 
-import static practica1.control.ControlEvent.ControlEventType.*;
+import practica1.EventType;
 import java.util.Arrays;
 import java.util.Hashtable;
 import practica1.Event;
 import practica1.EventListener;
+import static practica1.EventType.*;
 import practica1.Prova;
 import practica1.model.Model;
+import practica1.vista.VistaEvent;
 
 /**
  *
@@ -17,6 +19,7 @@ public class Control extends Thread implements EventListener {
     private int moda;
     private int repModa;
     private int resultA, resultB;
+    private int currentLength;
 
     private static boolean doHash = false, doArray = false, doProducte = false;
     
@@ -69,6 +72,7 @@ public class Control extends Thread implements EventListener {
             } else if (repeticions > repModa) {
                 repModa = repeticions;
             }
+            prova.notify(new VistaEvent(temps, EventType.ARRAY));
         }
         temps = System.nanoTime() - temps;
         resultA = moda;
@@ -82,13 +86,14 @@ public class Control extends Thread implements EventListener {
     representa el producto vectorial del mismo vector por sí mismo. Para calcular cada 
     elemento del vector resultado, se realiza la suma de los productos
     */
-    private static void productoVectorial(long temps, int [] vector) {
+    private void productoVectorial(long temps, int [] vector) {
         int n = vector.length;
         int[] resultado = new int[n];
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 resultado[i] += vector[i] * vector[j];
+                prova.notify(new VistaEvent(temps, EventType.VECTORIAL));
             }
         }
 
@@ -114,6 +119,7 @@ public class Control extends Thread implements EventListener {
                     repModa = prevValue+1;
                 }
             }
+            prova.notify(new VistaEvent(temps, EventType.HASH));
         }
         temps = System.nanoTime() - temps;
         resultB = moda;
@@ -125,6 +131,7 @@ public class Control extends Thread implements EventListener {
     @Override
     public void notify(Event e) {
         ControlEvent event = (ControlEvent) e;
+        currentLength = 2;
         if (event.type.equals(ARRAY)) {
             doArray = true;
         }
