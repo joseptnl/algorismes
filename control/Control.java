@@ -71,8 +71,6 @@ public class Control extends Thread implements EventListener {
         System.out.println("Per executar array he tardat\t"
                 + temps + " ns. Moda = " + resultA);
         
-    }
-    
     private void modaWithHash(long temps, int [] vector) {
         Hashtable<Integer,Integer> ht = new Hashtable<Integer,Integer>();
         repModa = 0;
