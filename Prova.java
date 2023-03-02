@@ -9,7 +9,6 @@ import practica1.vista.Vista;
  *
  * @author usuario
  */
-// Hola martin como estás ?? Mal
 public class Prova implements EventListener {
     
     private Model model;
@@ -28,21 +27,22 @@ public class Prova implements EventListener {
         model = new Model(1000, this);
         // Wait for button
         control = new Control(this);
-        control.run();
+        vista = new Vista(this);
+        //control.run();
     }
 
     @Override
     public void notify(Event e) {
-        switch (e.getEventType()) {
-            case Model:
-                model.notify();
-                break;
-            case View:
-                vista.notify();
-                break;
-            case Control:
-                control.notify();
-                break;
+        switch (e.getEventType()){
+            case Model -> {
+                model.notify(e);
+            }
+            case View -> {
+                vista.notify(e);
+            }
+            case Control -> {
+                control.notify(e);
+            }
         }
     }
     
