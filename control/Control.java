@@ -18,7 +18,7 @@ public class Control extends Thread implements EventListener {
     private int repModa;
     private int resultA, resultB;
 
-    private static boolean doHash = false, doArray = false;
+    private static boolean doHash = false, doArray = false, doProducte = false;
     
     public Control(Prova prova) {
         this.prova = prova;
@@ -39,6 +39,12 @@ public class Control extends Thread implements EventListener {
             doHash = false;
             temps = System.nanoTime();
             modaWithHash(temps, model.vector);
+        }
+        
+        if (doProducte) {
+            doProducte = false;
+            temps = System.nanoTime();
+            productoVectorial(temps, model.vector);
         }
     }
     
@@ -69,12 +75,6 @@ public class Control extends Thread implements EventListener {
 
         System.out.println("Per executar array he tardat\t"
                 + temps + " ns. Moda = " + resultA);
-        
-        //PRODUCTO VECTORIAL
-        int[] vector = {1, 2, 3, 4};
-        int[] resultado = productoVectorial(vector);
-        System.out.println(Arrays.toString(resultado));
-
     }
     
     /*
@@ -82,7 +82,7 @@ public class Control extends Thread implements EventListener {
     representa el producto vectorial del mismo vector por sí mismo. Para calcular cada 
     elemento del vector resultado, se realiza la suma de los productos
     */
-    public static int[] productoVectorial(int[] vector) {
+    private static void productoVectorial(long temps, int [] vector) {
         int n = vector.length;
         int[] resultado = new int[n];
 
@@ -92,7 +92,8 @@ public class Control extends Thread implements EventListener {
             }
         }
 
-        return resultado;
+        System.out.println("Per executar el producte vectorial he tardat\t"
+                + temps + " ns.");
     }
         
     private void modaWithHash(long temps, int [] vector) {
@@ -130,6 +131,10 @@ public class Control extends Thread implements EventListener {
         
         if (event.type.equals(HASH)) {
             doHash = true;
+        }
+        
+        if (event.type.equals(VECTORIAL)) {
+            doProducte = true;
         }
         
         (new Thread(this)).start();
