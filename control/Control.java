@@ -1,5 +1,6 @@
 package practica1.control;
 
+import static practica1.control.ControlEvent.ControlEventType.*;
 import java.util.Arrays;
 import java.util.Hashtable;
 import practica1.Event;
@@ -100,11 +101,11 @@ public class Control extends Thread implements EventListener {
     @Override
     public void notify(Event e) {
         ControlEvent event = (ControlEvent) e;
-        if (event.type.equals("ARRAY")) {
+        if (event.type.equals(ARRAY)) {
             doArray = true;
         }
         
-        if (event.type.equals("HASH")) {
+        if (event.type.equals(HASH)) {
             doHash = true;
         }
         
