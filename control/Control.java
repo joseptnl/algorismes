@@ -12,9 +12,7 @@ import practica1.model.Model;
  *
  * @author usuario
  */
-
 public class Control extends Thread implements EventListener {
-    
     private Prova prova;
     private int moda;
     private int repModa;
@@ -71,6 +69,31 @@ public class Control extends Thread implements EventListener {
 
         System.out.println("Per executar array he tardat\t"
                 + temps + " ns. Moda = " + resultA);
+        
+        //PRODUCTO VECTORIAL
+        int[] vector = {1, 2, 3, 4};
+        int[] resultado = productoVectorial(vector);
+        System.out.println(Arrays.toString(resultado));
+
+    }
+    
+    /*
+    Recibe como parámetro un vector de enteros y devuelve otro vector de enteros que 
+    representa el producto vectorial del mismo vector por sí mismo. Para calcular cada 
+    elemento del vector resultado, se realiza la suma de los productos
+    */
+    public static int[] productoVectorial(int[] vector) {
+        int n = vector.length;
+        int[] resultado = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                resultado[i] += vector[i] * vector[j];
+            }
+        }
+
+        return resultado;
+    }
         
     private void modaWithHash(long temps, int [] vector) {
         Hashtable<Integer,Integer> ht = new Hashtable<Integer,Integer>();
