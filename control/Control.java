@@ -12,22 +12,22 @@ import practica1.model.Model;
  * @author usuario
  */
 public class Control implements EventListener {
-    
+
     private Prova prova;
     private int moda;
     private int repModa;
     private int resultA, resultB;
-    
+
     public Control(Prova prova) {
         this.prova = prova;
     }
-    
+
     public void run() {
         Model model = prova.getModel();
-        
+
         long temps = System.nanoTime();
-        
-        Hashtable<Integer,Integer> ht = new Hashtable<Integer,Integer>();
+
+        Hashtable<Integer, Integer> ht = new Hashtable<Integer, Integer>();
         repModa = 0;
         for (int i = 0; i < model.vector.length; i++) {
             if (!ht.containsKey(model.vector[i])) {
@@ -38,23 +38,23 @@ public class Control implements EventListener {
                 }
             } else {
                 int prevValue = (int) ht.get(model.vector[i]);
-                ht.replace(model.vector[i], prevValue+1);
-                if (prevValue+1 > repModa) {
+                ht.replace(model.vector[i], prevValue + 1);
+                if (prevValue + 1 > repModa) {
                     moda = model.vector[i];
-                    repModa = prevValue+1;
+                    repModa = prevValue + 1;
                 }
             }
         }
         temps = System.nanoTime() - temps;
         resultB = moda;
-        
+
         System.out.println("Per executar hash he tardat\t"
                 + temps + " ns. Moda = " + resultB);
-        
+
         temps = System.nanoTime();
-        
+
         Arrays.sort(model.vector);
-        
+
         moda = -1;
         repModa = 0;
         int currentNum = -1;
@@ -66,7 +66,7 @@ public class Control implements EventListener {
             } else {
                 repeticions++;
             }
-            
+
             if (repeticions > repModa && currentNum != moda) {
                 moda = currentNum;
                 repModa = repeticions;
@@ -76,16 +76,37 @@ public class Control implements EventListener {
         }
         temps = System.nanoTime() - temps;
         resultA = moda;
-        
+
         System.out.println("Per executar array he tardat\t"
                 + temps + " ns. Moda = " + resultA);
         
-        
+        //PRODUCTO VECTORIAL
+        int[] vector = {1, 2, 3, 4};
+        int[] resultado = productoVectorial(vector);
+        System.out.println(Arrays.toString(resultado));
+
+    }
+    /*
+    Recibe como parámetro un vector de enteros y devuelve otro vector de enteros que 
+    representa el producto vectorial del mismo vector por sí mismo. Para calcular cada 
+    elemento del vector resultado, se realiza la suma de los productos
+    */
+    public static int[] productoVectorial(int[] vector) {
+        int n = vector.length;
+        int[] resultado = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                resultado[i] += vector[i] * vector[j];
+            }
+        }
+
+        return resultado;
     }
 
     @Override
     public void notify(Event e) {
 
     }
-    
+
 }
