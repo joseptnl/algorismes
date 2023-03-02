@@ -72,7 +72,7 @@ public class Control extends Thread implements EventListener {
             } else if (repeticions > repModa) {
                 repModa = repeticions;
             }
-            prova.notify(new VistaEvent(temps, EventType.ARRAY));
+            prova.notify(new VistaEvent(temps, EventType.ARRAY, currentLength));
         }
         temps = System.nanoTime() - temps;
         resultA = moda;
@@ -93,7 +93,7 @@ public class Control extends Thread implements EventListener {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 resultado[i] += vector[i] * vector[j];
-                prova.notify(new VistaEvent(temps, EventType.VECTORIAL));
+                prova.notify(new VistaEvent(temps, EventType.VECTORIAL, currentLength));
             }
         }
 
@@ -119,7 +119,7 @@ public class Control extends Thread implements EventListener {
                     repModa = prevValue+1;
                 }
             }
-            prova.notify(new VistaEvent(temps, EventType.HASH));
+            prova.notify(new VistaEvent(temps, EventType.HASH, currentLength));
         }
         temps = System.nanoTime() - temps;
         resultB = moda;
