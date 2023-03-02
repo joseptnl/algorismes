@@ -19,7 +19,6 @@ public class Control extends Thread implements EventListener {
     private int moda;
     private int repModa;
     private int resultA, resultB;
-    private int currentLength;
 
     private static boolean doHash = false, doArray = false, doProducte = false;
     
@@ -34,20 +33,32 @@ public class Control extends Thread implements EventListener {
         long temps; 
         if (doArray) {
             doArray = false;
-            temps = System.nanoTime();
-            modaWithArray(temps, model.vector);
+            for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
+                temps = System.nanoTime();
+                modaWithArray(temps, model.vector);
+                temps = System.nanoTime() - temps;
+                prova.notify(new VistaEvent(temps, EventType.ARRAY, currentLength));
+            }
         }
         
         if (doHash) {
             doHash = false;
-            temps = System.nanoTime();
-            modaWithHash(temps, model.vector);
+            for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
+                temps = System.nanoTime();
+                modaWithHash(temps, model.vector);
+                temps = System.nanoTime() - temps;
+                prova.notify(new VistaEvent(temps, EventType.HASH, currentLength));
+            }
         }
         
         if (doProducte) {
             doProducte = false;
-            temps = System.nanoTime();
-            productoVectorial(temps, model.vector);
+            for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
+                temps = System.nanoTime();
+                productoVectorial(temps, model.vector);
+                temps = System.nanoTime() - temps;
+                prova.notify(new VistaEvent(temps, EventType.VECTORIAL, currentLength));
+            }
         }
     }
     
@@ -72,13 +83,12 @@ public class Control extends Thread implements EventListener {
             } else if (repeticions > repModa) {
                 repModa = repeticions;
             }
-            prova.notify(new VistaEvent(temps, EventType.ARRAY, currentLength));
+            
         }
-        temps = System.nanoTime() - temps;
         resultA = moda;
 
-        System.out.println("Per executar array he tardat\t"
-                + temps + " ns. Moda = " + resultA);
+        /*System.out.println("Per executar array he tardat\t"
+                + temps + " ns. Moda = " + resultA);*/
     }
     
     /*
@@ -93,12 +103,11 @@ public class Control extends Thread implements EventListener {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 resultado[i] += vector[i] * vector[j];
-                prova.notify(new VistaEvent(temps, EventType.VECTORIAL, currentLength));
             }
         }
 
-        System.out.println("Per executar el producte vectorial he tardat\t"
-                + temps + " ns.");
+        /*System.out.println("Per executar el producte vectorial he tardat\t"
+                + temps + " ns.");*/
     }
         
     private void modaWithHash(long temps, int [] vector) {
@@ -119,19 +128,17 @@ public class Control extends Thread implements EventListener {
                     repModa = prevValue+1;
                 }
             }
-            prova.notify(new VistaEvent(temps, EventType.HASH, currentLength));
         }
-        temps = System.nanoTime() - temps;
         resultB = moda;
         
-        System.out.println("Per executar hash he tardat\t"
-                + temps + " ns. Moda = " + resultB);
+        /*System.out.println("Per executar hash he tardat\t"
+                + temps + " ns. Moda = " + resultB);*/
     }
 
     @Override
     public void notify(Event e) {
         ControlEvent event = (ControlEvent) e;
-        currentLength = 2;
+
         if (event.type.equals(ARRAY)) {
             doArray = true;
         }
