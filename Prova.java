@@ -25,19 +25,17 @@ public class Prova implements EventListener {
     
     private void init() {
         model = new Model(100000, this);
-        // Wait for button
         control = new Control(this);
         vista = new Vista(this);
-        //control.run();
     }
 
     @Override
     public void notify(Event e) {
-        switch (e.getEventType()){
+        switch (e.getEventOrigin()){
             case Model -> {
                 model.notify(e);
             }
-            case View -> {
+            case Vista -> {
                 vista.notify(e);
             }
             case Control -> {

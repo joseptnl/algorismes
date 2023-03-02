@@ -1,32 +1,27 @@
 package practica1.control;
 
 import practica1.Event;
+import practica1.EventType;
 
 /**
  *
  * @author usuario
  */
 public class ControlEvent extends Event {
-    public ControlEventType type;
+    public EventType type;
     
     public ControlEvent(int buttonNum) {
-        super(EventType.Control);
+        super(EventOrigin.Control);
         switch (buttonNum) {
             case 1:
-                type = ControlEventType.VECTORIAL;
+                type = EventType.VECTORIAL;
                 break;
             case 2:
-                type = ControlEventType.ARRAY;
+                type = EventType.ARRAY;
                 break;
             case 3:
-                type = ControlEventType.HASH;
+                type = EventType.HASH;
                 break;
         }
-    }
-    
-    enum ControlEventType {
-        VECTORIAL,
-        ARRAY,
-        HASH
     }
 }
