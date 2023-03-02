@@ -80,7 +80,6 @@ public class Control implements EventListener {
         System.out.println("Per executar array he tardat\t"
                 + temps + " ns. Moda = " + resultA);
         
-        
     }
 
     @Override
