@@ -19,19 +19,34 @@ public class Control extends Thread implements EventListener {
     private int moda;
     private int repModa;
     private int resultA, resultB;
-
-    private static boolean doHash = false, doArray = false, doProducte = false;
+    
+    static private boolean[] running;
+    
+    final static private EventType[] eventTypes = EventType.values(); 
     
     public Control(Prova prova) {
         this.prova = prova;
+        this.running = new boolean[eventTypes.length];
+        for (int i = 0; i < eventTypes.length; i++) running[i] = false;
     }
     
     @Override
     public void run() {
         Model model = prova.getModel();
         
+        EventType threadType = EventType.valueOf(Thread.currentThread().getName());
+        
+        switch(threadType) {
+            case ARRAY:
+                break;
+            case HASH:
+                break;
+            case VECTORIAL:
+                break;
+        }
+        
         long temps; 
-        if (doArray) {
+        if (doArray && !running[0]) {
             doArray = false;
             for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
                 temps = System.nanoTime();
@@ -39,9 +54,10 @@ public class Control extends Thread implements EventListener {
                 temps = System.nanoTime() - temps;
                 prova.notify(new VistaEvent(temps, EventType.ARRAY, currentLength));
             }
+            running[0] = false;
         }
         
-        if (doHash) {
+        if (doHash && !running[1]) {
             doHash = false;
             for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
                 temps = System.nanoTime();
@@ -49,9 +65,10 @@ public class Control extends Thread implements EventListener {
                 temps = System.nanoTime() - temps;
                 prova.notify(new VistaEvent(temps, EventType.HASH, currentLength));
             }
+            running[1] = false;
         }
         
-        if (doProducte) {
+        if (doProducte && !running[2]) {
             doProducte = false;
             for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
                 temps = System.nanoTime();
@@ -59,6 +76,11 @@ public class Control extends Thread implements EventListener {
                 temps = System.nanoTime() - temps;
                 prova.notify(new VistaEvent(temps, EventType.VECTORIAL, currentLength));
             }
+            running[2] = false;
+        }
+        
+        synchronized (running) {
+            running[] = false;
         }
     }
     
@@ -139,19 +161,16 @@ public class Control extends Thread implements EventListener {
     public void notify(Event e) {
         ControlEvent event = (ControlEvent) e;
 
-        if (event.type.equals(ARRAY)) {
-            doArray = true;
-        }
-        
-        if (event.type.equals(HASH)) {
-            doHash = true;
-        }
-        
-        if (event.type.equals(VECTORIAL)) {
-            doProducte = true;
-        }
-        
-        (new Thread(this)).start();
-    }
+        for (int i = 0; i < event.types.length; i++) {
+            int eventid = event.types[i].ordinal();
+            synchronized (running) {
+                if (running[eventid]) break;
+                running[eventid] = true;
+            }
 
+            Thread thread = new Thread(this);
+            thread.setName(event.types[i].toString());
+            thread.start();
+        }
+    }
 }

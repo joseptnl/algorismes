@@ -8,20 +8,18 @@ import practica1.EventType;
  * @author usuario
  */
 public class ControlEvent extends Event {
-    public EventType type;
+    final public EventType[] types;
     
-    public ControlEvent(int buttonNum) {
+    public ControlEvent(int nexecutions, int[] executionstype) {
         super(EventOrigin.Control);
-        switch (buttonNum) {
-            case 1:
-                type = EventType.VECTORIAL;
-                break;
-            case 2:
-                type = EventType.ARRAY;
-                break;
-            case 3:
-                type = EventType.HASH;
-                break;
+        types = new EventType[nexecutions];
+        
+        try {
+            for (int i = 0; i < nexecutions; i++) {
+                types[i] = EventType.values()[executionstype[i]];
+            }
+        } catch (java.lang.IndexOutOfBoundsException e) {
+            System.out.println("ERROR Vista: No s'ha notificat al controlador de manera correcta, revisi la crida.");
         }
     }
 }
