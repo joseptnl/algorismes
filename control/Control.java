@@ -62,41 +62,6 @@ public class Control extends Thread implements EventListener {
             prova.notify(new VistaEvent(temps, EventType.valueOf(threadName), currentLength));
         }
         
-        /*
-        long temps; 
-        if (doArray && !running[0]) {
-            doArray = false;
-            for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
-                temps = System.nanoTime();
-                modaWithArray(model.vector);
-                temps = System.nanoTime() - temps;
-                prova.notify(new VistaEvent(temps, EventType.ARRAY, currentLength));
-            }
-            running[0] = false;
-        }
-        
-        if (doHash && !running[1]) {
-            doHash = false;
-            for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
-                temps = System.nanoTime();
-                modaWithHash(model.vector);
-                temps = System.nanoTime() - temps;
-                prova.notify(new VistaEvent(temps, EventType.HASH, currentLength));
-            }
-            running[1] = false;
-        }
-        
-        if (doProducte && !running[2]) {
-            doProducte = false;
-            for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
-                temps = System.nanoTime();
-                productoVectorial(model.vector);
-                temps = System.nanoTime() - temps;
-                prova.notify(new VistaEvent(temps, EventType.VECTORIAL, currentLength));
-            }
-            running[2] = false;
-        }*/
-        
         synchronized (running) {
             running[EventType.valueOf(threadName).ordinal()] = false;
         }
@@ -178,17 +143,19 @@ public class Control extends Thread implements EventListener {
     @Override
     public void notify(Event e) {
         ControlEvent event = (ControlEvent) e;
+        
+        if (!event.isCorrupt()) {
+            for (int i = 0; i < event.types.length; i++) {
+                int eventid = event.types[i].ordinal();
+                synchronized (running) {
+                    if (running[eventid]) continue;
+                    running[eventid] = true;
+                }
 
-        for (int i = 0; i < event.types.length; i++) {
-            int eventid = event.types[i].ordinal();
-            synchronized (running) {
-                if (running[eventid]) continue;
-                running[eventid] = true;
+                Thread thread = new Thread(this);
+                thread.setName(event.types[i].toString());
+                thread.start();
             }
-
-            Thread thread = new Thread(this);
-            thread.setName(event.types[i].toString());
-            thread.start();
         }
     }
 }
