@@ -3,17 +3,20 @@ package practica1.control;
 import practica1.EventType;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 import practica1.Event;
 import practica1.EventListener;
 import static practica1.EventType.*;
 import practica1.Prova;
 import practica1.model.Model;
 import practica1.vista.VistaEvent;
+import practica1.control.FunctionRef;
 
 /**
  *
  * @author usuario
  */
+
 public class Control extends Thread implements EventListener {
     private Prova prova;
     private int moda;
@@ -21,6 +24,7 @@ public class Control extends Thread implements EventListener {
     private int resultA, resultB;
     
     static private boolean[] running;
+    static private int[] vector;
     
     final static private EventType[] eventTypes = EventType.values(); 
     
@@ -33,24 +37,38 @@ public class Control extends Thread implements EventListener {
     @Override
     public void run() {
         Model model = prova.getModel();
-        
-        EventType threadType = EventType.valueOf(Thread.currentThread().getName());
+        String threadName = Thread.currentThread().getName();
+        EventType threadType = EventType.valueOf(threadName);
+        vector = model.vector;
+        FunctionRef algorithm = null;
         
         switch(threadType) {
             case ARRAY:
+                algorithm = () -> {modaWithArray();};
                 break;
             case HASH:
+                algorithm = () -> {modaWithHash();};
                 break;
             case VECTORIAL:
+                algorithm = () -> {productoVectorial();};
                 break;
         }
+
+        long temps; 
+        for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
+            temps = System.nanoTime();
+            algorithm.func();
+            temps = System.nanoTime() - temps;
+            prova.notify(new VistaEvent(temps, EventType.valueOf(threadName), currentLength));
+        }
         
+        /*
         long temps; 
         if (doArray && !running[0]) {
             doArray = false;
             for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
                 temps = System.nanoTime();
-                modaWithArray(temps, model.vector);
+                modaWithArray(model.vector);
                 temps = System.nanoTime() - temps;
                 prova.notify(new VistaEvent(temps, EventType.ARRAY, currentLength));
             }
@@ -61,7 +79,7 @@ public class Control extends Thread implements EventListener {
             doHash = false;
             for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
                 temps = System.nanoTime();
-                modaWithHash(temps, model.vector);
+                modaWithHash(model.vector);
                 temps = System.nanoTime() - temps;
                 prova.notify(new VistaEvent(temps, EventType.HASH, currentLength));
             }
@@ -72,19 +90,19 @@ public class Control extends Thread implements EventListener {
             doProducte = false;
             for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
                 temps = System.nanoTime();
-                productoVectorial(temps, model.vector);
+                productoVectorial(model.vector);
                 temps = System.nanoTime() - temps;
                 prova.notify(new VistaEvent(temps, EventType.VECTORIAL, currentLength));
             }
             running[2] = false;
-        }
+        }*/
         
         synchronized (running) {
-            running[] = false;
+            running[EventType.valueOf(threadName).ordinal()] = false;
         }
     }
     
-    private void modaWithArray(long temps, int [] vector) {
+    private void modaWithArray() {
         Arrays.sort(vector);
        
         moda = -1;
@@ -118,7 +136,7 @@ public class Control extends Thread implements EventListener {
     representa el producto vectorial del mismo vector por sí mismo. Para calcular cada 
     elemento del vector resultado, se realiza la suma de los productos
     */
-    private void productoVectorial(long temps, int [] vector) {
+    private void productoVectorial() {
         int n = vector.length;
         int[] resultado = new int[n];
 
@@ -132,7 +150,7 @@ public class Control extends Thread implements EventListener {
                 + temps + " ns.");*/
     }
         
-    private void modaWithHash(long temps, int [] vector) {
+    private void modaWithHash() {
         Hashtable<Integer,Integer> ht = new Hashtable<Integer,Integer>();
         repModa = 0;
         for (int i = 0; i < vector.length; i++) {
@@ -164,7 +182,7 @@ public class Control extends Thread implements EventListener {
         for (int i = 0; i < event.types.length; i++) {
             int eventid = event.types[i].ordinal();
             synchronized (running) {
-                if (running[eventid]) break;
+                if (running[eventid]) continue;
                 running[eventid] = true;
             }
 
