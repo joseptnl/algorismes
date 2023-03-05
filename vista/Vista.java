@@ -138,17 +138,18 @@ public class Vista extends javax.swing.JFrame implements EventListener {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        prova.notify(new ControlEvent(2));
+        int[] alg = {0, 2};
+        prova.notify(new ControlEvent(2, alg));
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        prova.notify(new ControlEvent(3));
+        //prova.notify(new ControlEvent(3));
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        prova.notify(new ControlEvent(1));
+        //prova.notify(new ControlEvent(1));
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void RestartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RestartButtonActionPerformed
