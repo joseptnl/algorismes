@@ -34,6 +34,36 @@ public class Control extends Thread implements EventListener {
         for (int i = 0; i < eventTypes.length; i++) running[i] = false;
     }
     
+    /**
+     * Funcions sobreescrites de les interfícies.
+     */
+    
+    /**
+     * Reb un objecte event enviat des de la vista, l'interpreta i fa l'acció
+     * correponent com a resposta
+     */
+    @Override
+    public void notify(Event e) {
+        ControlEvent event = (ControlEvent) e;
+        
+        if (!event.isCorrupt()) {
+            for (int i = 0; i < event.types.length; i++) {
+                int eventid = event.types[i].ordinal();
+                synchronized (running) {
+                    if (running[eventid]) continue;
+                    running[eventid] = true;
+                }
+
+                Thread thread = new Thread(this);
+                thread.setName(event.types[i].toString());
+                thread.start();
+            }
+        }
+    }
+    
+    /**
+     * Executa el codi corresponent a cada thread segons el seu nom
+     */
     @Override
     public void run() {
         Model model = prova.getModel();
@@ -67,6 +97,19 @@ public class Control extends Thread implements EventListener {
         }
     }
     
+    /**
+     * ALGORISMES PER A REPRESENTAR EL COST ASINTÒTIC
+     * 
+     * Prenen el vector d'enters proporcionat per el model i li apliquen certes 
+     * operacions, cada un simulant un cost d'execució distint.
+    */
+    
+    /**
+     * Calcula la moda del vector de la següent manera:
+     *  - Ordena el vector
+     *  - Compte el nombre d'aparicions consecutives de cada un i establint com
+     *  a moda el nombre que més vegades aparegui consecutivament
+     */
     private void modaWithArray() {
         Arrays.sort(vector);
        
@@ -91,16 +134,12 @@ public class Control extends Thread implements EventListener {
             
         }
         resultA = moda;
-
-        /*System.out.println("Per executar array he tardat\t"
-                + temps + " ns. Moda = " + resultA);*/
     }
     
-    /*
-    Recibe como parámetro un vector de enteros y devuelve otro vector de enteros que 
-    representa el producto vectorial del mismo vector por sí mismo. Para calcular cada 
-    elemento del vector resultado, se realiza la suma de los productos
-    */
+    /**
+     * Realitza un producte vectorial del vector amb ell mateix per a simular
+     * un cost exponencial
+     */
     private void productoVectorial() {
         int n = vector.length;
         int[] resultado = new int[n];
@@ -110,11 +149,18 @@ public class Control extends Thread implements EventListener {
                 resultado[i] += vector[i] * vector[j];
             }
         }
-
-        /*System.out.println("Per executar el producte vectorial he tardat\t"
-                + temps + " ns.");*/
     }
-        
+    
+    /**
+     * Calcula la moda del vector de la següent manera:
+     *  - Recorre el vector
+     *  - Per a cada element que no estigui dins el hash l'inserta com a clau i
+     *  posa el seu valor(representat el nombre de vegades que apareix dins aquest)
+     *  a 1, si l'element ja està dins el hash actualitzarà el seu valor sumant 1
+     * 
+     *  NOTA: En cada moment emmagatzema quin és la clau amb el valor més alt per 
+     *  a l'hora de trobar la moda no haver de recórrer tota l'estructura
+     */    
     private void modaWithHash() {
         Hashtable<Integer,Integer> ht = new Hashtable<Integer,Integer>();
         repModa = 0;
@@ -135,27 +181,5 @@ public class Control extends Thread implements EventListener {
             }
         }
         resultB = moda;
-        
-        /*System.out.println("Per executar hash he tardat\t"
-                + temps + " ns. Moda = " + resultB);*/
-    }
-
-    @Override
-    public void notify(Event e) {
-        ControlEvent event = (ControlEvent) e;
-        
-        if (!event.isCorrupt()) {
-            for (int i = 0; i < event.types.length; i++) {
-                int eventid = event.types[i].ordinal();
-                synchronized (running) {
-                    if (running[eventid]) continue;
-                    running[eventid] = true;
-                }
-
-                Thread thread = new Thread(this);
-                thread.setName(event.types[i].toString());
-                thread.start();
-            }
-        }
     }
 }
