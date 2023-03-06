@@ -11,7 +11,7 @@ import practica1.control.ControlEvent;
  * @author usuario
  */
 public class Vista extends javax.swing.JFrame implements EventListener {
-    private Main prova;
+    private Main main;
     private int [] alg;
     private int n;
     
@@ -20,9 +20,9 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     /**
      * Creates new form Vista
      */
-    public Vista(Main prova) {
+    public Vista(Main main) {
         initComponents();
-        this.prova = prova;
+        this.main = main;
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         this.alg = new int[3];
@@ -256,7 +256,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
 
     private void buttonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStartActionPerformed
         if (this.numAlg > 0) {
-            this.prova.notify(new ControlEvent(this.n, this.alg));
+            this.main.notify(new ControlEvent(this.n, this.alg));
         }
     }//GEN-LAST:event_buttonStartActionPerformed
 

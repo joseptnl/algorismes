@@ -11,12 +11,12 @@ import practica1.Main;
  */
 public class Model implements EventListener {
     
-    private Main prova;
+    private Main main;
     public int [] vector;
     
-    public Model(int n, Main prova) {
+    public Model(int n, Main main) {
         this.vector = new int[n];
-        this.prova = prova;
+        this.main = main;
         
         assignRandoms();
     }
