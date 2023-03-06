@@ -138,8 +138,8 @@ public class Vista extends javax.swing.JFrame implements EventListener {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        int[] alg = {1, 2, 2};
-        prova.notify(new ControlEvent(4, alg));
+        int[] alg = {1, 5, 2};
+        prova.notify(new ControlEvent(3, alg));
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
