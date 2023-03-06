@@ -1,5 +1,6 @@
 package practica1.control;
 
+import java.util.List;
 import practica1.Event;
 import practica1.EventType;
 
@@ -8,17 +9,20 @@ import practica1.EventType;
  * @author usuario
  */
 public class ControlEvent extends Event {
-    final public EventType[] types;
+    public EventType[] types;
     
+    public boolean operationType;   // If true means start executions, if false
+                                    // means delete execution
+             
     private boolean corruptData;
     
-    public ControlEvent(int nexecutions, int[] executionstype) {
+    public ControlEvent(List<Integer> executiontypes, boolean operationType) {
         super(EventOrigin.Control);
-        types = new EventType[nexecutions];
+        this.operationType = operationType;
         
         try {
-            for (int i = 0; i < nexecutions; i++) {
-                types[i] = EventType.values()[executionstype[i]];
+            for (int i = 0; i < executiontypes.size(); i++) {
+                types[i] = EventType.values()[executiontypes.get(i)];
             }
             corruptData = false;
         } catch (Exception e) {
