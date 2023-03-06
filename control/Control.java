@@ -26,12 +26,15 @@ public class Control extends Thread implements EventListener {
     static private boolean[] running;
     static private int[] vector;
     
+    private Thread[] threadsRef;
+    
     final static private EventType[] eventTypes = EventType.values(); 
     
     public Control(Main main) {
         this.main = main;
         this.running = new boolean[eventTypes.length];
         for (int i = 0; i < eventTypes.length; i++) running[i] = false;
+        threadsRef = new Thread[eventTypes.length];
     }
     
     /**
@@ -47,16 +50,29 @@ public class Control extends Thread implements EventListener {
         ControlEvent event = (ControlEvent) e;
         
         if (!event.isCorrupt()) {
-            for (int i = 0; i < event.types.length; i++) {
-                int eventid = event.types[i].ordinal();
-                synchronized (running) {
-                    if (running[eventid]) continue;
-                    running[eventid] = true;
-                }
+            if (event.operationType) {
+                for (int i = 0; i < event.types.length; i++) {
+                    int eventid = event.types[i].ordinal();
+                    synchronized (running) {
+                        if (running[eventid]) continue;
+                        running[eventid] = true;
+                    }
 
-                Thread thread = new Thread(this);
-                thread.setName(event.types[i].toString());
-                thread.start();
+                    threadsRef[eventid-1] = new Thread(this);
+                    threadsRef[eventid-1].setName(event.types[i].toString());
+                    threadsRef[eventid-1].start();
+                }
+            } else {
+                try {
+                    for (int i = 0; i < event.types.length; i++) {
+                        int eventid = event.types[i].ordinal();
+                        threadsRef[eventid-1].stop();
+                        threadsRef[eventid-1] = null;
+                    }
+                } catch (Exception except) {
+                    System.out.println("ERROR Control: Un dels algoritmes sol·licitats"
+                            + " per a l'eliminació no s'estan executant.");
+                }
             }
         }
     }
