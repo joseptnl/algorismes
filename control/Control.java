@@ -7,7 +7,7 @@ import java.util.List;
 import practica1.Event;
 import practica1.EventListener;
 import static practica1.EventType.*;
-import practica1.Prova;
+import practica1.Main;
 import practica1.model.Model;
 import practica1.vista.VistaEvent;
 import practica1.control.FunctionRef;
@@ -18,7 +18,7 @@ import practica1.control.FunctionRef;
  */
 
 public class Control extends Thread implements EventListener {
-    private Prova prova;
+    private Main main;
     private int moda;
     private int repModa;
     private int resultA, resultB;
@@ -28,8 +28,8 @@ public class Control extends Thread implements EventListener {
     
     final static private EventType[] eventTypes = EventType.values(); 
     
-    public Control(Prova prova) {
-        this.prova = prova;
+    public Control(Main main) {
+        this.main = main;
         this.running = new boolean[eventTypes.length];
         for (int i = 0; i < eventTypes.length; i++) running[i] = false;
     }
@@ -66,7 +66,7 @@ public class Control extends Thread implements EventListener {
      */
     @Override
     public void run() {
-        Model model = prova.getModel();
+        Model model = main.getModel();
         String threadName = Thread.currentThread().getName();
         EventType threadType = EventType.valueOf(threadName);
         vector = model.vector;
@@ -89,7 +89,7 @@ public class Control extends Thread implements EventListener {
             temps = System.nanoTime();
             algorithm.func();
             temps = System.nanoTime() - temps;
-            prova.notify(new VistaEvent(temps, EventType.valueOf(threadName), currentLength));
+            main.notify(new VistaEvent(temps, EventType.valueOf(threadName), currentLength));
         }
         
         synchronized (running) {

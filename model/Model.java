@@ -3,7 +3,7 @@ package practica1.model;
 import java.util.Random;
 import practica1.Event;
 import practica1.EventListener;
-import practica1.Prova;
+import practica1.Main;
 
 /**
  *
@@ -11,12 +11,12 @@ import practica1.Prova;
  */
 public class Model implements EventListener {
     
-    private Prova prova;
+    private Main main;
     public int [] vector;
     
-    public Model(int n, Prova prova) {
+    public Model(int n, Main main) {
         this.vector = new int[n];
-        this.prova = prova;
+        this.main = main;
         
         assignRandoms();
     }
