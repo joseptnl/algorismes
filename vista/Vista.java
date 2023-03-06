@@ -1,10 +1,12 @@
 package practica1.vista;
 
+import java.util.List;
 import practica1.Event;
 import practica1.EventListener;
 import practica1.EventType;
 import practica1.Main;
 import practica1.control.ControlEvent;
+import practica1.model.ModelEvent;
 
 /**
  *
@@ -12,10 +14,9 @@ import practica1.control.ControlEvent;
  */
 public class Vista extends javax.swing.JFrame implements EventListener {
     private Main main;
-    private int [] alg;
-    private int n;
-    
+    private List<Integer> alg;
     private int numAlg = 0;
+    private int n;
 
     /**
      * Creates new form Vista
@@ -25,7 +26,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
         this.main = main;
         this.setVisible(true);
         this.setLocationRelativeTo(null);
-        this.alg = new int[3];
+        this.setResizable(false);
         this.n = 1000;
         this.setTitle("Asymptotic complexity");
     }
@@ -225,24 +226,15 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonArrayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonArrayActionPerformed
-        if (this.numAlg < 3) {
-            this.numAlg++;
-            this.alg[this.numAlg] = 2;
-        }
+        this.alg.add(2);
     }//GEN-LAST:event_buttonArrayActionPerformed
 
     private void buttonHashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonHashActionPerformed
-        if (this.numAlg < 3) {
-            this.numAlg++;
-            this.alg[this.numAlg] = 3;
-        }
+        this.alg.add(3);
     }//GEN-LAST:event_buttonHashActionPerformed
 
     private void buttonProducteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProducteActionPerformed
-        if (this.numAlg < 3) {
-            this.numAlg++;
-            this.alg[this.numAlg] = 1;
-        }
+        this.alg.add(1);
     }//GEN-LAST:event_buttonProducteActionPerformed
 
     private void nNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nNumberActionPerformed
@@ -251,13 +243,19 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     }//GEN-LAST:event_nNumberActionPerformed
 
     private void buttonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonResetActionPerformed
-        
+        buttonProducte.setEnabled(true);
+        buttonArray.setEnabled(true);
+        buttonHash.setEnabled(true);
     }//GEN-LAST:event_buttonResetActionPerformed
 
     private void buttonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStartActionPerformed
-        if (this.numAlg > 0) {
-            this.main.notify(new ControlEvent(this.n, this.alg));
-        }
+        //if (this.numAlg > 0) {
+            //this.main.notify(new ControlEvent(this.alg));
+            buttonProducte.setEnabled(false);
+            buttonArray.setEnabled(false);
+            buttonHash.setEnabled(false);
+            this.main.notify(new ModelEvent(this.n));
+       // }
     }//GEN-LAST:event_buttonStartActionPerformed
 
 

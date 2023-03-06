@@ -14,11 +14,8 @@ public class Model implements EventListener {
     private Main main;
     public int [] vector;
     
-    public Model(int n, Main main) {
-        this.vector = new int[n];
+    public Model(Main main) {
         this.main = main;
-        
-        assignRandoms();
     }
     
     private void assignRandoms() {
@@ -30,7 +27,10 @@ public class Model implements EventListener {
 
     @Override
     public void notify(Event e) {
-
+        ModelEvent event = (ModelEvent) e;
+        
+        this.vector = new int[event.length];
+        assignRandoms();
     }
     
 }

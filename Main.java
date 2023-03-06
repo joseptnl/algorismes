@@ -24,7 +24,7 @@ public class Main implements EventListener {
     }
     
     private void init() {
-        model = new Model(10000, this);
+        model = new Model(this);
         control = new Control(this);
         vista = new Vista(this);
     }
