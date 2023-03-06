@@ -9,7 +9,7 @@ import practica1.vista.Vista;
  *
  * @author usuario
  */
-public class Prova implements EventListener {
+public class Main implements EventListener {
     
     private Model model;
     private Vista vista;
@@ -20,7 +20,7 @@ public class Prova implements EventListener {
      */
     public static void main(String[] args) {
         Mesurament.mesura();
-        (new Prova()).init();
+        (new Main()).init();
     }
     
     private void init() {
