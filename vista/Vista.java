@@ -16,7 +16,7 @@ import practica1.model.ModelEvent;
  */
 public class Vista extends javax.swing.JFrame implements EventListener {
     private Main main;
-    private List<Integer> alg;
+    private List<EventType> alg;
     private int n;
 
     /**
@@ -25,7 +25,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     public Vista(Main main) {
         this.main = main;
         initComponents();
-        this.alg = new ArrayList<Integer>();
+        this.alg = new ArrayList<EventType>();
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -265,22 +265,22 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonArrayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonArrayActionPerformed
-        if (!this.alg.contains(1)) {
-            this.alg.add(1);
+        if (!this.alg.contains(EventType.ARRAY)) {
+            this.alg.add(EventType.ARRAY);
             buttonArray.setBackground(new Color(0,102,102).darker());
         }
     }//GEN-LAST:event_buttonArrayActionPerformed
 
     private void buttonHashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonHashActionPerformed
-        if (!this.alg.contains(2)) {
-            this.alg.add(2);
+        if (!this.alg.contains(EventType.HASH)) {
+            this.alg.add(EventType.HASH);
             buttonHash.setBackground(new Color(0,102,102).darker());
         }
     }//GEN-LAST:event_buttonHashActionPerformed
 
     private void buttonProducteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProducteActionPerformed
-        if (!this.alg.contains(0)) {
-            this.alg.add(0);
+        if (!this.alg.contains(EventType.VECTORIAL)) {
+            this.alg.add(EventType.VECTORIAL);
             buttonProducte.setBackground(new Color(0,102,102).darker());
         }
     }//GEN-LAST:event_buttonProducteActionPerformed
@@ -294,8 +294,8 @@ public class Vista extends javax.swing.JFrame implements EventListener {
         buttonProducte.setBackground(new Color(0,102,102));
         buttonArray.setBackground(new Color(0,102,102));
         buttonHash.setBackground(new Color(0,102,102));
-        this.alg.clear();
-        this.main.getModel().reset();
+        /*this.alg.clear();
+        this.main.getModel().reset();*/
     }//GEN-LAST:event_buttonResetActionPerformed
 
     private void buttonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStartActionPerformed
@@ -310,8 +310,8 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     @Override
     public void notify(Event e) {
         VistaEvent event = (VistaEvent) e;
-        
-        panelGrafica.refresGrafica(event);
+        //System.out.println("TIME : " + event.time);
+        panelGrafica.refreshGrafica(event);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

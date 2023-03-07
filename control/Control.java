@@ -3,14 +3,14 @@ package practica1.control;
 import practica1.EventType;
 import java.util.Arrays;
 import java.util.Hashtable;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import practica1.Event;
 import practica1.EventListener;
 import static practica1.EventType.*;
 import practica1.Main;
 import practica1.model.Model;
 import practica1.vista.VistaEvent;
-import practica1.control.FunctionRef;
 
 /**
  *
@@ -24,8 +24,11 @@ public class Control extends Thread implements EventListener {
     
     static private boolean[] running;
     static private int[] vector;
-    static private long maxTime;
+    static private long maxTime = 0;
+    static private int increaseRate;
+    static private long sleepTime;
     
+    private int currentIter;
     private Thread[] threadsRef;
     
     final static private EventType[] eventTypes = EventType.values(); 
@@ -85,6 +88,8 @@ public class Control extends Thread implements EventListener {
         String threadName = Thread.currentThread().getName();
         EventType threadType = EventType.valueOf(threadName);
         vector = model.vector;
+        increaseRate = vector.length / model.N_PUNTS;
+        sleepTime = model.getSleepTime(); 
         FunctionRef algorithm = null;
         
         switch(threadType) {
@@ -100,16 +105,15 @@ public class Control extends Thread implements EventListener {
         }
 
         long temps;
-        long tempsTotal = 0;
-        maxTime = 0;
-        for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
+        for (int currentLength = 2; currentLength <= model.vector.length; currentLength+=increaseRate) {
+            this.currentIter = currentLength;
             temps = System.nanoTime();
             algorithm.func();
             temps = System.nanoTime() - temps;
-            tempsTotal += temps;
-            if (tempsTotal > maxTime) maxTime = tempsTotal;
+            
+            if (temps > maxTime) maxTime = temps;
             model.addTime(threadType, temps);
-            main.notify(new VistaEvent(tempsTotal, maxTime, EventType.valueOf(threadName), currentLength));
+            main.notify(new VistaEvent(maxTime, EventType.valueOf(threadName)));
         }
         
         synchronized (running) {
@@ -131,7 +135,7 @@ public class Control extends Thread implements EventListener {
      *  a moda el nombre que més vegades aparegui consecutivament
      */
     private void modaWithArray() {
-        int [] copy = Arrays.copyOf(vector, vector.length);
+        int [] copy = Arrays.copyOf(vector, currentIter);
         Arrays.sort(copy);
        
         moda = -1;
@@ -152,7 +156,6 @@ public class Control extends Thread implements EventListener {
             } else if (repeticions > repModa) {
                 repModa = repeticions;
             }
-            
         }
     }
     
@@ -161,12 +164,18 @@ public class Control extends Thread implements EventListener {
      * un cost exponencial
      */
     private void productoVectorial() {
-        int n = vector.length;
+        int n = currentIter;
         int[] resultado = new int[n];
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 resultado[i] += vector[i] * vector[j];
+                
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }
@@ -185,7 +194,7 @@ public class Control extends Thread implements EventListener {
         Hashtable<Integer,Integer> ht = new Hashtable<Integer,Integer>();
 
         repModa = 0;
-        for (int i = 0; i < vector.length; i++) {
+        for (int i = 0; i < currentIter; i++) {
             if (!ht.containsKey(vector[i])) {
                 ht.put(vector[i], 1);
                 if (1 > repModa) {
@@ -199,6 +208,12 @@ public class Control extends Thread implements EventListener {
                     moda = vector[i];
                     repModa = prevValue+1;
                 }
+            }
+            
+            try {
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

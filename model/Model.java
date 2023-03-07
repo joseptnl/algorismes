@@ -16,6 +16,9 @@ public class Model implements EventListener {
     
     private Main main;
     public int [] vector;
+    public final int N_PUNTS = 10;
+    private final int MS_SLEEP = 20; // standard time for n = 1000
+    private final int STANDARD_N = 1000;
     private ConcurrentHashMap<EventType, ArrayList<Long>> llistaTime;
     
     public Model(Main main) {
@@ -51,6 +54,10 @@ public class Model implements EventListener {
         for (EventType alg : EventType.values()) {
             this.llistaTime.put(alg, new ArrayList<>());
         }
+    }
+    
+    public long getSleepTime() {
+        return STANDARD_N * MS_SLEEP / vector.length;
     }
 
     @Override

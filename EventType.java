@@ -11,6 +11,7 @@ public enum EventType {
     ARRAY,
     HASH;
     
+    // each type of event is related to a color
     public Color getColor() {
         switch (this) {
             case VECTORIAL -> {

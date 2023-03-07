@@ -16,14 +16,14 @@ public class ControlEvent extends Event {
              
     private boolean corruptData;
     
-    public ControlEvent(List<Integer> executiontypes, boolean operationType) {
+    public ControlEvent(List<EventType> executiontypes, boolean operationType) {
         super(EventOrigin.Control);
         this.operationType = operationType;
         this.types = new EventType[executiontypes.size()];
         
         try {
             for (int i = 0; i < executiontypes.size(); i++) {
-                types[i] = EventType.values()[executiontypes.get(i)];
+                types[i] = executiontypes.get(i);
             }
             corruptData = false;
         } catch (Exception e) {
