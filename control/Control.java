@@ -21,10 +21,10 @@ public class Control extends Thread implements EventListener {
     private Main main;
     private int moda;
     private int repModa;
-    private int resultA, resultB;
     
     static private boolean[] running;
     static private int[] vector;
+    static private long maxTime;
     
     private Thread[] threadsRef;
     
@@ -69,7 +69,8 @@ public class Control extends Thread implements EventListener {
                         if (!running[eventid]) continue;
                         running[eventid] = false;
                     }
-                    threadsRef[eventid].stop();
+                    //threadsRef[eventid].stop();
+                    threadsRef[eventid].interrupt();
                 }
             }
         }
@@ -98,12 +99,17 @@ public class Control extends Thread implements EventListener {
                 break;
         }
 
-        long temps; 
+        long temps;
+        long tempsTotal = 0;
+        maxTime = 0;
         for (int currentLength = 2; currentLength <= model.vector.length; currentLength++) {
             temps = System.nanoTime();
             algorithm.func();
             temps = System.nanoTime() - temps;
-            main.notify(new VistaEvent(temps, EventType.valueOf(threadName), currentLength));
+            tempsTotal += temps;
+            if (tempsTotal > maxTime) maxTime = tempsTotal;
+            model.addTime(threadType, temps);
+            main.notify(new VistaEvent(tempsTotal, maxTime, EventType.valueOf(threadName), currentLength));
         }
         
         synchronized (running) {
@@ -125,15 +131,16 @@ public class Control extends Thread implements EventListener {
      *  a moda el nombre que més vegades aparegui consecutivament
      */
     private void modaWithArray() {
-        Arrays.sort(vector);
+        int [] copy = Arrays.copyOf(vector, vector.length);
+        Arrays.sort(copy);
        
         moda = -1;
         repModa = 0;
         int currentNum = -1;
         int repeticions = 0;
-        for (int i = 0; i < vector.length; i++) {
-            if (vector[i] != currentNum) {
-                currentNum = vector[i];
+        for (int i = 0; i < copy.length; i++) {
+            if (copy[i] != currentNum) {
+                currentNum = copy[i];
                 repeticions = 1;
             } else {
                 repeticions++;
@@ -147,7 +154,6 @@ public class Control extends Thread implements EventListener {
             }
             
         }
-        resultA = moda;
     }
     
     /**
@@ -177,6 +183,7 @@ public class Control extends Thread implements EventListener {
      */    
     private void modaWithHash() {
         Hashtable<Integer,Integer> ht = new Hashtable<Integer,Integer>();
+
         repModa = 0;
         for (int i = 0; i < vector.length; i++) {
             if (!ht.containsKey(vector[i])) {
@@ -194,6 +201,5 @@ public class Control extends Thread implements EventListener {
                 }
             }
         }
-        resultB = moda;
     }
 }

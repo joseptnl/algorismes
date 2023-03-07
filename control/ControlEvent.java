@@ -19,6 +19,7 @@ public class ControlEvent extends Event {
     public ControlEvent(List<Integer> executiontypes, boolean operationType) {
         super(EventOrigin.Control);
         this.operationType = operationType;
+        this.types = new EventType[executiontypes.size()];
         
         try {
             for (int i = 0; i < executiontypes.size(); i++) {

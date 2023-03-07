@@ -1,5 +1,7 @@
 package practica1.vista;
 
+import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 import practica1.Event;
 import practica1.EventListener;
@@ -15,15 +17,15 @@ import practica1.model.ModelEvent;
 public class Vista extends javax.swing.JFrame implements EventListener {
     private Main main;
     private List<Integer> alg;
-    private int numAlg = 0;
     private int n;
 
     /**
      * Creates new form Vista
      */
     public Vista(Main main) {
-        initComponents();
         this.main = main;
+        initComponents();
+        this.alg = new ArrayList<Integer>();
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -42,6 +44,9 @@ public class Vista extends javax.swing.JFrame implements EventListener {
 
         jProgressBar1 = new javax.swing.JProgressBar();
         jPanel1 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        panelGrafica = new Grafica(this.main);
         jPanel2 = new javax.swing.JPanel();
         nNumber = new javax.swing.JTextField();
         buttonArray = new javax.swing.JButton();
@@ -61,15 +66,51 @@ public class Vista extends javax.swing.JFrame implements EventListener {
 
         jPanel1.setBackground(new java.awt.Color(204, 255, 255));
 
+        jLabel5.setText("N");
+
+        jLabel6.setText("Time");
+
+        panelGrafica.setBackground(new java.awt.Color(230, 230, 230));
+
+        javax.swing.GroupLayout panelGraficaLayout = new javax.swing.GroupLayout(panelGrafica);
+        panelGrafica.setLayout(panelGraficaLayout);
+        panelGraficaLayout.setHorizontalGroup(
+            panelGraficaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 482, Short.MAX_VALUE)
+        );
+        panelGraficaLayout.setVerticalGroup(
+            panelGraficaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 355, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 548, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel6)
+                        .addGap(18, 18, 18)
+                        .addComponent(panelGrafica, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(269, 269, 269)
+                        .addComponent(jLabel5)))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(181, 181, 181)
+                .addComponent(jLabel6)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelGrafica, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel5)
+                .addContainerGap())
         );
 
         jPanel2.setBackground(new java.awt.Color(0, 51, 51));
@@ -82,7 +123,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
         });
 
         buttonArray.setBackground(new java.awt.Color(0, 102, 102));
-        buttonArray.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        buttonArray.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         buttonArray.setForeground(new java.awt.Color(255, 255, 255));
         buttonArray.setText("n*log(n)");
         buttonArray.setBorderPainted(false);
@@ -93,7 +134,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
         });
 
         buttonHash.setBackground(new java.awt.Color(0, 102, 102));
-        buttonHash.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        buttonHash.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         buttonHash.setForeground(new java.awt.Color(255, 255, 255));
         buttonHash.setText("n");
         buttonHash.setBorderPainted(false);
@@ -104,7 +145,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
         });
 
         buttonProducte.setBackground(new java.awt.Color(0, 102, 102));
-        buttonProducte.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        buttonProducte.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         buttonProducte.setForeground(new java.awt.Color(255, 255, 255));
         buttonProducte.setText("n²");
         buttonProducte.setBorderPainted(false);
@@ -206,12 +247,10 @@ public class Vista extends javax.swing.JFrame implements EventListener {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -226,15 +265,24 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonArrayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonArrayActionPerformed
-        this.alg.add(2);
+        if (!this.alg.contains(1)) {
+            this.alg.add(1);
+            buttonArray.setBackground(new Color(0,102,102).darker());
+        }
     }//GEN-LAST:event_buttonArrayActionPerformed
 
     private void buttonHashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonHashActionPerformed
-        this.alg.add(3);
+        if (!this.alg.contains(2)) {
+            this.alg.add(2);
+            buttonHash.setBackground(new Color(0,102,102).darker());
+        }
     }//GEN-LAST:event_buttonHashActionPerformed
 
     private void buttonProducteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProducteActionPerformed
-        this.alg.add(1);
+        if (!this.alg.contains(0)) {
+            this.alg.add(0);
+            buttonProducte.setBackground(new Color(0,102,102).darker());
+        }
     }//GEN-LAST:event_buttonProducteActionPerformed
 
     private void nNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nNumberActionPerformed
@@ -243,34 +291,27 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     }//GEN-LAST:event_nNumberActionPerformed
 
     private void buttonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonResetActionPerformed
-        buttonProducte.setEnabled(true);
-        buttonArray.setEnabled(true);
-        buttonHash.setEnabled(true);
+        buttonProducte.setBackground(new Color(0,102,102));
+        buttonArray.setBackground(new Color(0,102,102));
+        buttonHash.setBackground(new Color(0,102,102));
+        this.alg.clear();
+        this.main.getModel().reset();
     }//GEN-LAST:event_buttonResetActionPerformed
 
     private void buttonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStartActionPerformed
-        //if (this.numAlg > 0) {
-            //this.main.notify(new ControlEvent(this.alg));
-            buttonProducte.setEnabled(false);
-            buttonArray.setEnabled(false);
-            buttonHash.setEnabled(false);
-            this.main.notify(new ModelEvent(this.n));
-       // }
+       if (!this.alg.isEmpty()) {
+           panelGrafica.setN(this.n);
+           this.main.notify(new ModelEvent(this.n));
+           this.main.notify(new ControlEvent(this.alg, true));
+       }
     }//GEN-LAST:event_buttonStartActionPerformed
 
 
     @Override
     public void notify(Event e) {
         VistaEvent event = (VistaEvent) e;
-        if (event.type == EventType.ARRAY) {
-            System.out.println("ARRAY - Iteration: "+event.iteration);
-        }
-        if (event.type == EventType.HASH) {
-            System.out.println("HASH - Iteration: "+event.iteration);
-        }
-        if (event.type == EventType.VECTORIAL) {
-            System.out.println("VECTORIAL - Iteration: "+event.iteration);
-        }
+        
+        panelGrafica.refresGrafica(event);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -283,9 +324,15 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JTextField nNumber;
+    /*
+    private javax.swing.JPanel panelGrafica;
+    */
+    Grafica panelGrafica;
     // End of variables declaration//GEN-END:variables
 }
