@@ -303,11 +303,24 @@ public class Vista extends javax.swing.JFrame implements EventListener {
         this.alg.clear();
         panelGrafica.reset();*/
         //System.exit(0);
-        this.main.notify(new ControlEvent());
+        //this.main.notify(new ControlEvent());
+        /*
+        this.main.notify(new ControlEvent(this.alg, false));
+        this.main.notify(new ModelEvent());
+        this.alg.clear();
+        panelGrafica.reset();*/
+        buttonProducte.setBackground(new Color(0,102,102));
+        buttonArray.setBackground(new Color(0,102,102));
+        buttonHash.setBackground(new Color(0,102,102));
+        buttonStart.setEnabled(true);
+        this.main.reset();
+        this.alg.clear();
+        panelGrafica.reset();
     }//GEN-LAST:event_buttonResetActionPerformed
 
     private void buttonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStartActionPerformed
        if (!this.alg.isEmpty()) {
+           buttonStart.setEnabled(false);
            panelGrafica.setN(this.n);
            this.main.notify(new ModelEvent(this.n));
            this.main.notify(new ControlEvent(this.alg, true));
@@ -320,10 +333,10 @@ public class Vista extends javax.swing.JFrame implements EventListener {
         if (number < 10) {
             this.n = 10;
             nNumber.setValue(10);
-        } else if (number > 999999) {
+        } /*else if (number > 999999) {
             this.n = 999999;
             nNumber.setValue(999999);
-        } else {
+        }*/ else {
             this.n = number;
         }
     }//GEN-LAST:event_nNumberStateChanged

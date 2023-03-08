@@ -21,22 +21,22 @@ import practica1.Main;
 public class Grafica extends JPanel {
     private BufferedImage bima;
     private Main main;
-    private int n;
-    private long maxTime = 1;
-    private int increaseRate;
-    private final int N_POINTS = 10;
-    private int currentPoint;
+    static private long maxTime = 1;
+    private int currentPoint, n;
+    static private int increaseRate = 10;
+    private final int N_PUNTS = 50, MS_SLEEP = 200, TIME_LIMIT = 53341000;
     private JProgressBar bar;
+    private boolean stopped;
     
     public Grafica(Main main, JProgressBar bar) {
         this.main = main;
         this.bar = bar;
         this.currentPoint = 0;
+        this.stopped = false;
     }
     
     public void setN(int n) {
         this.n = n;
-        this.increaseRate = this.n / N_POINTS;
     }
     
     public void repaint() {
@@ -62,6 +62,7 @@ public class Grafica extends JPanel {
         g2.setStroke(new BasicStroke(2F, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
         Set<EventType> algs = llista.keySet();
+        long temps = 0;
 
         for(EventType alg : algs){
             g2.setColor(alg.getColor());
@@ -69,30 +70,41 @@ public class Grafica extends JPanel {
             ArrayList<Long> times = llista.get(alg);
             
             for (int i = 0; i<times.size();i++) {
-                int lastX = transformX(i * this.increaseRate);
+                int lastX = transformX(i * N_PUNTS);
                 int lastY = transformY(i == 0 ? 0 : times.get(i-1), maxTime);
 
-                int X = transformX((i+1) * this.increaseRate);
-                int Y = transformY(times.get(i), maxTime);
-                g2.drawLine(lastX, lastY, X, Y); 
+                int X = transformX((i+1) * N_PUNTS);
+                temps = times.get(i);
+                int Y = transformY(temps, maxTime);
+                
+                g2.drawLine(lastX, lastY, X, Y);
+                /*if (temps > TIME_LIMIT) {
+                    this.stopped = true;
+                    break;
+                }*/
             }            
         }
         
-        bar.setValue(this.currentPoint * 10);
+        //bar.setValue(this.currentPoint * 10);
         this.currentPoint++;
         try {
-            Thread.sleep(20);
+            Thread.sleep(MS_SLEEP);
         } catch (InterruptedException ex) {
             Logger.getLogger(Grafica.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     public void refreshGrafica(VistaEvent event) {
-        this.maxTime = event.maxTime;
+        if (!this.stopped) {
+            Grafica.maxTime = event.maxTime;
+        }
         this.repaint();
     }
     
     public void reset() {
+        Grafica.maxTime = 1;
+        this.currentPoint = 0;
+        this.stopped = false;
         this.repaint();
     }
     

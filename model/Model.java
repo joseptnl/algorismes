@@ -17,14 +17,14 @@ public class Model implements EventListener {
     
     private Main main;
     public int [] vector;
-    public final int N_PUNTS = 10;
-    private final int MS_SLEEP = 5; // standard time for n = 1000
-    private final int STANDARD_N = 1000;
+    public final int N_PUNTS = 50;
+    private final int MAX_RANDOM = 100;
+    
     private ConcurrentHashMap<EventType, ArrayList<Long>> llistaTime;
     
     public Model(Main main) {
         this.main = main;
-        
+
         this.llistaTime = new ConcurrentHashMap<>();
 
         for (EventType alg : EventType.values()) {
@@ -35,7 +35,7 @@ public class Model implements EventListener {
     private void assignRandoms() {
         Random rnd = new Random();
         for (int i = 0; i < this.vector.length; i++) {
-            this.vector[i] = rnd.nextInt(11);
+            this.vector[i] = rnd.nextInt(MAX_RANDOM);
         }
     }
     
@@ -50,29 +50,13 @@ public class Model implements EventListener {
     public ConcurrentHashMap<EventType, ArrayList<Long>> getTimes() {
         return this.llistaTime;
     }
-    
-    /*public void reset() {
-        Set<EventType> algs = this.llistaTime.keySet();
-
-        for(EventType alg : algs){
-            algs.clear();
-        }
-    }*/
-    
-    public long getSleepTime() {
-        return STANDARD_N * MS_SLEEP / vector.length;
-    }
 
     @Override
     public void notify(Event e) {
         ModelEvent event = (ModelEvent) e;
         
-        /*if (event.reset) {
-            reset();
-        } else {*/
-            this.vector = new int[event.length];
-            assignRandoms();
-        //}
+        this.vector = new int[event.length];
+        assignRandoms();
     }
     
 }

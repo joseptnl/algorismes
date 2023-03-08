@@ -29,11 +29,10 @@ public class Main implements EventListener {
         vista = new Vista(this);
     }
     
-    /*public void reset() {
+    public void reset() {
         model = new Model(this);
         control = new Control(this);
-        vista = new Vista(this);
-    }*/
+    }
 
     @Override
     public void notify(Event e) {
