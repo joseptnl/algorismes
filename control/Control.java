@@ -38,7 +38,6 @@ public class Control extends Thread implements EventListener {
         this.running = new boolean[eventTypes.length];
         for (int i = 0; i < eventTypes.length; i++) running[i] = false;
         threadsRef = new Thread[eventTypes.length];
-        
     }
     
     /**
@@ -54,28 +53,44 @@ public class Control extends Thread implements EventListener {
         ControlEvent event = (ControlEvent) e;
         
         if (!event.isCorrupt()) {
-            if (event.operationType) {
-                for (int i = 0; i < event.types.length; i++) {
-                    int eventid = event.types[i].ordinal();
-                    synchronized (running) {
-                        if (running[eventid]) continue;
-                        running[eventid] = true;
+            if (event.reset) {
+                for (int i = 0; i < eventTypes.length; i++) {
+                    if (running[i]) {
+                       
+                            threadsRef[i].interrupt(); 
+                        running[i] = false;
                     }
-                    threadsRef[eventid] = new Thread(this);
-                    threadsRef[eventid].setName(eventTypes[eventid].toString());
-                    threadsRef[eventid].start();
                 }
+                threadsRef = new Thread[eventTypes.length];
             } else {
-                for (int i = 0; i < event.types.length; i++) {
-                    int eventid = event.types[i].ordinal();
-                    synchronized (running) {
-                        if (!running[eventid]) continue;
-                        running[eventid] = false;
+                if (event.operationType) {
+                    for (int i = 0; i < event.types.length; i++) {
+                        int eventid = event.types[i].ordinal();
+                        synchronized (running) {
+                            if (running[eventid]) continue;
+                            running[eventid] = true;
+                        }
+                        threadsRef[eventid] = new Thread(this);
+                        threadsRef[eventid].setName(eventTypes[eventid].toString());
+                        threadsRef[eventid].start();
                     }
-                    //threadsRef[eventid].stop();
-                    threadsRef[eventid].interrupt();
+                } else {
+                    for (int i = 0; i < event.types.length; i++) {
+                        int eventid = event.types[i].ordinal();
+                        synchronized (running) {
+                            if (!running[eventid]) continue;
+                            running[eventid] = false;
+                        }
+                        //threadsRef[eventid].stop();
+                        //threadsRef[eventid].interrupt();
+                        try  
+                        {    
+                            threadsRef[eventid].interrupt(); 
+                        }catch(Exception ex){System.out.println("Exception handled "+ex);}    
+                    }
                 }
             }
+            
         }
     }
     
@@ -100,7 +115,15 @@ public class Control extends Thread implements EventListener {
                 algorithm = () -> {modaWithHash();};
                 break;
             case VECTORIAL:
-                algorithm = () -> {productoVectorial();};
+                algorithm = () -> {
+                    try {
+                        productoVectorial();
+                    }catch(Exception ex){
+                        System.out.println("Exception handled "+ex);
+                        synchronized (running) {
+                        running[EventType.valueOf(threadName).ordinal()] = false;
+                    }
+                }};
                 break;
         }
 
@@ -108,16 +131,22 @@ public class Control extends Thread implements EventListener {
         for (int currentLength = 2; currentLength <= model.vector.length; currentLength+=increaseRate) {
             this.currentIter = currentLength;
             temps = System.nanoTime();
+            
             algorithm.func();
+            /*if (!running[EventType.valueOf(threadName).ordinal()]) {
+                break;
+            }*/
             temps = System.nanoTime() - temps;
             
             if (temps > maxTime) maxTime = temps;
             model.addTime(threadType, temps);
-            main.notify(new VistaEvent(maxTime, EventType.valueOf(threadName)));
+            main.notify(new VistaEvent(temps, maxTime, EventType.valueOf(threadName)));
         }
         
-        synchronized (running) {
+        if (running[EventType.valueOf(threadName).ordinal()]) {
+            synchronized (running) {
             running[EventType.valueOf(threadName).ordinal()] = false;
+            }   
         }
     }
     
@@ -163,19 +192,13 @@ public class Control extends Thread implements EventListener {
      * Realitza un producte vectorial del vector amb ell mateix per a simular
      * un cost exponencial
      */
-    private void productoVectorial() {
+    private void productoVectorial() throws InterruptedException {
         int n = currentIter;
         int[] resultado = new int[n];
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 resultado[i] += vector[i] * vector[j];
-                
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }
         }
     }
@@ -208,12 +231,6 @@ public class Control extends Thread implements EventListener {
                     moda = vector[i];
                     repModa = prevValue+1;
                 }
-            }
-            
-            try {
-                Thread.sleep(sleepTime);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

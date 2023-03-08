@@ -2,6 +2,7 @@ package practica1.model;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import practica1.Event;
 import practica1.EventListener;
@@ -17,7 +18,7 @@ public class Model implements EventListener {
     private Main main;
     public int [] vector;
     public final int N_PUNTS = 10;
-    private final int MS_SLEEP = 20; // standard time for n = 1000
+    private final int MS_SLEEP = 5; // standard time for n = 1000
     private final int STANDARD_N = 1000;
     private ConcurrentHashMap<EventType, ArrayList<Long>> llistaTime;
     
@@ -50,11 +51,13 @@ public class Model implements EventListener {
         return this.llistaTime;
     }
     
-    public void reset() {
-        for (EventType alg : EventType.values()) {
-            this.llistaTime.put(alg, new ArrayList<>());
+    /*public void reset() {
+        Set<EventType> algs = this.llistaTime.keySet();
+
+        for(EventType alg : algs){
+            algs.clear();
         }
-    }
+    }*/
     
     public long getSleepTime() {
         return STANDARD_N * MS_SLEEP / vector.length;
@@ -64,9 +67,12 @@ public class Model implements EventListener {
     public void notify(Event e) {
         ModelEvent event = (ModelEvent) e;
         
-        this.vector = new int[event.length];
-        
-        assignRandoms();
+        /*if (event.reset) {
+            reset();
+        } else {*/
+            this.vector = new int[event.length];
+            assignRandoms();
+        //}
     }
     
 }

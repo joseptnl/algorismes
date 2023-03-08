@@ -7,7 +7,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import practica1.EventType;
 import practica1.Main;
 
@@ -22,9 +25,13 @@ public class Grafica extends JPanel {
     private long maxTime = 1;
     private int increaseRate;
     private final int N_POINTS = 10;
+    private int currentPoint;
+    private JProgressBar bar;
     
-    public Grafica(Main main) {
+    public Grafica(Main main, JProgressBar bar) {
         this.main = main;
+        this.bar = bar;
+        this.currentPoint = 0;
     }
     
     public void setN(int n) {
@@ -67,9 +74,16 @@ public class Grafica extends JPanel {
 
                 int X = transformX((i+1) * this.increaseRate);
                 int Y = transformY(times.get(i), maxTime);
-                
-                g2.drawLine(lastX, lastY, X, Y);
-            }
+                g2.drawLine(lastX, lastY, X, Y); 
+            }            
+        }
+        
+        bar.setValue(this.currentPoint * 10);
+        this.currentPoint++;
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Grafica.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -77,7 +91,10 @@ public class Grafica extends JPanel {
         this.maxTime = event.maxTime;
         this.repaint();
     }
-
+    
+    public void reset() {
+        this.repaint();
+    }
     
     public int transformX(int x) {
         return (x*this.getWidth())/(this.n);

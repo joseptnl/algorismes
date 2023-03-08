@@ -42,13 +42,12 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jProgressBar1 = new javax.swing.JProgressBar();
+        bar = new javax.swing.JProgressBar();
         jPanel1 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        panelGrafica = new Grafica(this.main);
+        panelGrafica = new Grafica(this.main, this.bar);
         jPanel2 = new javax.swing.JPanel();
-        nNumber = new javax.swing.JTextField();
         buttonArray = new javax.swing.JButton();
         buttonHash = new javax.swing.JButton();
         buttonProducte = new javax.swing.JButton();
@@ -58,11 +57,12 @@ public class Vista extends javax.swing.JFrame implements EventListener {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        nNumber = new javax.swing.JSpinner();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jProgressBar1.setForeground(new java.awt.Color(51, 255, 255));
-        jProgressBar1.setValue(50);
+        bar.setForeground(new java.awt.Color(51, 255, 255));
 
         jPanel1.setBackground(new java.awt.Color(204, 255, 255));
 
@@ -114,13 +114,6 @@ public class Vista extends javax.swing.JFrame implements EventListener {
         );
 
         jPanel2.setBackground(new java.awt.Color(0, 51, 51));
-
-        nNumber.setText("1000");
-        nNumber.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nNumberActionPerformed(evt);
-            }
-        });
 
         buttonArray.setBackground(new java.awt.Color(0, 102, 102));
         buttonArray.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -191,6 +184,16 @@ public class Vista extends javax.swing.JFrame implements EventListener {
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Click to remove draw");
 
+        nNumber.setValue(1000);
+        nNumber.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                nNumberStateChanged(evt);
+            }
+        });
+
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Insert & Enter :");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -203,26 +206,30 @@ public class Vista extends javax.swing.JFrame implements EventListener {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nNumber))
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(nNumber)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(nNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
+                .addGap(9, 9, 9)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonHash, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -234,7 +241,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
                 .addComponent(jLabel3)
                 .addGap(5, 5, 5)
                 .addComponent(buttonStart)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonReset))
@@ -247,7 +254,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -257,7 +264,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(bar, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -285,17 +292,18 @@ public class Vista extends javax.swing.JFrame implements EventListener {
         }
     }//GEN-LAST:event_buttonProducteActionPerformed
 
-    private void nNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nNumberActionPerformed
-        // Canviam la n màxima per fer els càlculs
-        this.n = Integer.parseInt(nNumber.getText());
-    }//GEN-LAST:event_nNumberActionPerformed
-
     private void buttonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonResetActionPerformed
-        buttonProducte.setBackground(new Color(0,102,102));
+        /*buttonProducte.setBackground(new Color(0,102,102));
         buttonArray.setBackground(new Color(0,102,102));
         buttonHash.setBackground(new Color(0,102,102));
-        /*this.alg.clear();
-        this.main.getModel().reset();*/
+        //this.main.reset();
+        this.main.notify(new ModelEvent());
+        this.main.notify(new ControlEvent(this.alg, false));
+        
+        this.alg.clear();
+        panelGrafica.reset();*/
+        //System.exit(0);
+        this.main.notify(new ControlEvent());
     }//GEN-LAST:event_buttonResetActionPerformed
 
     private void buttonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStartActionPerformed
@@ -306,15 +314,31 @@ public class Vista extends javax.swing.JFrame implements EventListener {
        }
     }//GEN-LAST:event_buttonStartActionPerformed
 
+    private void nNumberStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_nNumberStateChanged
+        // Canviam la n màxima per fer els càlculs
+        int number = (int) nNumber.getValue();
+        if (number < 10) {
+            this.n = 10;
+            nNumber.setValue(10);
+        } else if (number > 999999) {
+            this.n = 999999;
+            nNumber.setValue(999999);
+        } else {
+            this.n = number;
+        }
+    }//GEN-LAST:event_nNumberStateChanged
+
 
     @Override
     public void notify(Event e) {
         VistaEvent event = (VistaEvent) e;
-        //System.out.println("TIME : " + event.time);
+        
+        System.out.println(event.type.toString() +" TIME : " + event.time);
         panelGrafica.refreshGrafica(event);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JProgressBar bar;
     private javax.swing.JButton buttonArray;
     private javax.swing.JButton buttonHash;
     private javax.swing.JButton buttonProducte;
@@ -326,10 +350,10 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JProgressBar jProgressBar1;
-    private javax.swing.JTextField nNumber;
+    private javax.swing.JSpinner nNumber;
     /*
     private javax.swing.JPanel panelGrafica;
     */
