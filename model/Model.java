@@ -17,8 +17,7 @@ public class Model implements EventListener {
     
     private Main main;
     public int [] vector;
-    public final int N_PUNTS = 50;
-    private final int MAX_RANDOM = 100;
+    public final int N_PUNTS = 60, MAX_RANDOM = 100;
     
     private ConcurrentHashMap<EventType, ArrayList<Long>> llistaTime;
     

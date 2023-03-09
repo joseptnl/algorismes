@@ -23,8 +23,7 @@ public class Grafica extends JPanel {
     private Main main;
     static private long maxTime = 1;
     private int currentPoint, n;
-    static private int increaseRate = 10;
-    private final int N_PUNTS = 50, MS_SLEEP = 200, TIME_LIMIT = 53341000;
+    private final int N_PUNTS = 60, MS_SLEEP = 200, TIME_LIMIT = 203341000;
     private JProgressBar bar;
     private boolean stopped;
     
@@ -68,25 +67,28 @@ public class Grafica extends JPanel {
             g2.setColor(alg.getColor());
 
             ArrayList<Long> times = llista.get(alg);
+            int size = times.size();
             
-            for (int i = 0; i<times.size();i++) {
-                int lastX = transformX(i * N_PUNTS);
+            updateProgressBar(size);
+            
+            for (int i = 0; i<size; i++) {
+                int lastX = transformX(i);
                 int lastY = transformY(i == 0 ? 0 : times.get(i-1), maxTime);
 
-                int X = transformX((i+1) * N_PUNTS);
+                int X = transformX((i+1));
                 temps = times.get(i);
                 int Y = transformY(temps, maxTime);
                 
                 g2.drawLine(lastX, lastY, X, Y);
-                /*if (temps > TIME_LIMIT) {
+                if (temps > TIME_LIMIT) {
                     this.stopped = true;
                     break;
-                }*/
+                }
             }            
         }
         
-        //bar.setValue(this.currentPoint * 10);
-        this.currentPoint++;
+        bar.setValue((this.currentPoint * 100) / this.N_PUNTS);
+        
         try {
             Thread.sleep(MS_SLEEP);
         } catch (InterruptedException ex) {
@@ -108,11 +110,15 @@ public class Grafica extends JPanel {
         this.repaint();
     }
     
-    public int transformX(int x) {
-        return (x*this.getWidth())/(this.n);
+    private int transformX(int x) {
+        return (x*this.getWidth())/N_PUNTS;
     }
     
-    public int transformY(long y, long maxY) {
+    private int transformY(long y, long maxY) {
         return Math.abs((int) (y * this.getHeight()/ maxY) - this.getHeight());
+    }
+    
+    private void updateProgressBar(int state) {
+        if (state > this.currentPoint) this.currentPoint = state;
     }
 }

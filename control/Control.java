@@ -5,8 +5,6 @@ import practica1.EventType;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import practica1.Event;
 import practica1.EventListener;
 import static practica1.EventType.*;
@@ -28,7 +26,6 @@ public class Control extends Thread implements EventListener {
     static private int[] vector;
     static private long maxTime;
     
-    private ArrayList<Integer> llistaN;
     private int currentIter;
     private Thread[] threadsRef;
     
@@ -38,7 +35,6 @@ public class Control extends Thread implements EventListener {
         this.main = main;
         maxTime = 0;
         this.running = new boolean[eventTypes.length];
-        this.llistaN = new ArrayList<Integer>();
         for (int i = 0; i < eventTypes.length; i++) running[i] = false;
         threadsRef = new Thread[eventTypes.length];
     }
@@ -74,7 +70,6 @@ public class Control extends Thread implements EventListener {
                             if (!running[eventid]) continue;
                             running[eventid] = false;
                         }
-                        //threadsRef[eventid].interrupt();
                         try  
                         {    
                             threadsRef[eventid].interrupt(); 
@@ -95,7 +90,12 @@ public class Control extends Thread implements EventListener {
         vector = model.vector;
         FunctionRef algorithm = null;
         Random rnd = new Random();
-        setLlistaN(vector.length, model.N_PUNTS);
+        ArrayList<Integer> llistaN = new ArrayList<Integer>();
+        
+        for (int i = 0; i < model.N_PUNTS * 5; i++) {
+            llistaN.add(rnd.nextInt(vector.length) + 10);
+        }
+        llistaN.sort(null);
         
         switch(threadType) {
             case ARRAY:
@@ -133,34 +133,32 @@ public class Control extends Thread implements EventListener {
                 break;
         }
 
-        long temps;
-        for (int i = 0; i < this.llistaN.size(); i++) {
-            this.currentIter = this.llistaN.get(i);
+        long temps, mitja = 0;
+        for (int i = 0; i < llistaN.size(); i++) {
+            this.currentIter = llistaN.get(i);
             temps = System.nanoTime();
-            
             algorithm.func();
+            temps = System.nanoTime() - temps;
+            
             if (!running[EventType.valueOf(threadName).ordinal()]) {
                 break;
             }
-            temps = System.nanoTime() - temps;
             
+            mitja += temps;
+            if ((i+1) % 5 == 0) {
+                mitja /= 5;
+                if (mitja > maxTime) maxTime = mitja;
+                model.addTime(threadType, mitja);
+                main.notify(new VistaEvent(mitja, maxTime, EventType.valueOf(threadName)));
+                mitja = 0;
+            }
             
-            if (temps > maxTime) maxTime = temps;
-            model.addTime(threadType, temps);
-            main.notify(new VistaEvent(temps, maxTime, EventType.valueOf(threadName)));
         }
         
         if (running[EventType.valueOf(threadName).ordinal()]) {
             synchronized (running) {
             running[EventType.valueOf(threadName).ordinal()] = false;
             }   
-        }
-    }
-    
-    private void setLlistaN(int n, int max) {
-        Random rnd = new Random();
-        for (int i = 0; i < max; i++) {
-            this.llistaN.add(rnd.nextInt(n) + 10);
         }
     }
     
