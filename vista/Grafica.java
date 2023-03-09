@@ -61,9 +61,9 @@ public class Grafica extends JPanel {
         g2.setStroke(new BasicStroke(2F, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
         Set<EventType> algs = llista.keySet();
-        long temps = 0;
 
         for(EventType alg : algs){
+            long temps = 0;
             g2.setColor(alg.getColor());
 
             ArrayList<Long> times = llista.get(alg);
@@ -71,16 +71,16 @@ public class Grafica extends JPanel {
             
             updateProgressBar(size);
             
-            for (int i = 0; i<size; i++) {
+            for (int i = 0; i < size; i++) {
                 int lastX = transformX(i);
                 int lastY = transformY(i == 0 ? 0 : times.get(i-1), maxTime);
 
-                int X = transformX((i+1));
+                int X = transformX(i+1);
                 temps = times.get(i);
                 int Y = transformY(temps, maxTime);
                 
                 g2.drawLine(lastX, lastY, X, Y);
-                if (temps > TIME_LIMIT) {
+                if (temps > TIME_LIMIT && alg.equals(EventType.VECTORIAL)) {
                     this.stopped = true;
                     break;
                 }

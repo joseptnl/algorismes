@@ -274,6 +274,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     private void buttonArrayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonArrayActionPerformed
         if (!this.alg.contains(EventType.ARRAY)) {
             this.alg.add(EventType.ARRAY);
+            buttonArray.setForeground(EventType.ARRAY.getColor());
             buttonArray.setBackground(new Color(0,102,102).darker());
         }
     }//GEN-LAST:event_buttonArrayActionPerformed
@@ -281,6 +282,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     private void buttonHashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonHashActionPerformed
         if (!this.alg.contains(EventType.HASH)) {
             this.alg.add(EventType.HASH);
+            buttonHash.setForeground(EventType.HASH.getColor());
             buttonHash.setBackground(new Color(0,102,102).darker());
         }
     }//GEN-LAST:event_buttonHashActionPerformed
@@ -288,6 +290,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     private void buttonProducteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProducteActionPerformed
         if (!this.alg.contains(EventType.VECTORIAL)) {
             this.alg.add(EventType.VECTORIAL);
+            buttonProducte.setForeground(EventType.VECTORIAL.getColor());
             buttonProducte.setBackground(new Color(0,102,102).darker());
         }
     }//GEN-LAST:event_buttonProducteActionPerformed
@@ -296,6 +299,11 @@ public class Vista extends javax.swing.JFrame implements EventListener {
         buttonProducte.setBackground(new Color(0,102,102));
         buttonArray.setBackground(new Color(0,102,102));
         buttonHash.setBackground(new Color(0,102,102));
+        
+        buttonProducte.setForeground(Color.white);
+        buttonArray.setForeground(Color.white);
+        buttonHash.setForeground(Color.white);
+        
         buttonStart.setEnabled(true);
         this.main.reset();
         this.alg.clear();
