@@ -93,7 +93,7 @@ public class Control extends Thread implements EventListener {
         ArrayList<Integer> llistaN = new ArrayList<Integer>();
         
         for (int i = 0; i < model.N_PUNTS * 5; i++) {
-            llistaN.add(rnd.nextInt(vector.length) + 10);
+            llistaN.add(rnd.nextInt(vector.length-10) + 10);
         }
         llistaN.sort(null);
         

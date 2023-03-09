@@ -23,7 +23,7 @@ public class Grafica extends JPanel {
     private Main main;
     static private long maxTime = 1;
     private int currentPoint, n;
-    private final int N_PUNTS = 60, MS_SLEEP = 200, TIME_LIMIT = 203341000;
+    private final int N_PUNTS = 60, MS_SLEEP = 200, TIME_LIMIT = 183341000;
     private JProgressBar bar;
     private boolean stopped;
     
@@ -62,6 +62,7 @@ public class Grafica extends JPanel {
 
         Set<EventType> algs = llista.keySet();
 
+        int lastPoint = N_PUNTS+1;
         for(EventType alg : algs){
             long temps = 0;
             g2.setColor(alg.getColor());
@@ -69,7 +70,9 @@ public class Grafica extends JPanel {
             ArrayList<Long> times = llista.get(alg);
             int size = times.size();
             
-            updateProgressBar(size);
+            if (0 < size && size < lastPoint) {
+                lastPoint = size;
+            }
             
             for (int i = 0; i < size; i++) {
                 int lastX = transformX(i);
@@ -87,7 +90,7 @@ public class Grafica extends JPanel {
             }            
         }
         
-        bar.setValue((this.currentPoint * 100) / this.N_PUNTS);
+        updateProgressBar(lastPoint == N_PUNTS+1 ? 0 : lastPoint);
         
         try {
             Thread.sleep(MS_SLEEP);
@@ -119,6 +122,9 @@ public class Grafica extends JPanel {
     }
     
     private void updateProgressBar(int state) {
-        if (state > this.currentPoint) this.currentPoint = state;
+        if (state > this.currentPoint) {
+            this.currentPoint = state;
+        }
+        bar.setValue((this.currentPoint * 100) / this.N_PUNTS);
     }
 }
