@@ -24,7 +24,6 @@ public class Control extends Thread implements EventListener {
     
     static private boolean[] running;
     static private int[] vector;
-    static private long maxTime;
     
     private int currentIter;
     private Thread[] threadsRef;
@@ -33,7 +32,6 @@ public class Control extends Thread implements EventListener {
     
     public Control(Main main) {
         this.main = main;
-        maxTime = 0;
         this.running = new boolean[eventTypes.length];
         for (int i = 0; i < eventTypes.length; i++) running[i] = false;
         threadsRef = new Thread[eventTypes.length];
@@ -89,9 +87,11 @@ public class Control extends Thread implements EventListener {
         EventType threadType = EventType.valueOf(threadName);
         vector = model.vector;
         FunctionRef algorithm = null;
+        
+        // feim servir un arrayList per emmagatzemar els valors random pels que farem el calcul
+        // multiplicam per 5 per fer sa mitja de cada 5 punts
         Random rnd = new Random();
         ArrayList<Integer> llistaN = new ArrayList<Integer>();
-        
         for (int i = 0; i < model.N_PUNTS * 5; i++) {
             llistaN.add(rnd.nextInt(vector.length-10) + 10);
         }
@@ -146,10 +146,10 @@ public class Control extends Thread implements EventListener {
             
             mitja += temps;
             if ((i+1) % 5 == 0) {
+                // afegim temps mig i notificam la seva visualitzacio
                 mitja /= 5;
-                if (mitja > maxTime) maxTime = mitja;
                 model.addTime(threadType, mitja);
-                main.notify(new VistaEvent(mitja, maxTime, EventType.valueOf(threadName)));
+                main.notify(new VistaEvent(mitja, EventType.valueOf(threadName)));
                 mitja = 0;
             }
             

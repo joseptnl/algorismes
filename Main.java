@@ -10,7 +10,7 @@ import practica1.vista.Vista;
  * @author usuario
  */
 public class Main implements EventListener {
-    
+    // components MVC centralitzat
     private Model model;
     private Vista vista;
     private Control control;

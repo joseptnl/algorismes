@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import practica1.EventType;
@@ -21,10 +22,14 @@ import practica1.Main;
 public class Grafica extends JPanel {
     private BufferedImage bima;
     private Main main;
-    static private long maxTime = 1;
+    private long maxTime;
+    // currentPoint es fa servir per actualitzar sa barra de progres
     private int currentPoint, n;
-    private final int N_PUNTS = 60, MS_SLEEP = 200, TIME_LIMIT = 183341000;
+    // N_PUNTS representa el nombre de punts a visualitzar
+    // TIME_LIMIT es un temps limit definit per aturar la visualitzacio del algorisme que creix mes rapidament
+    private final int N_PUNTS = 60, MS_SLEEP = 200, TIME_LIMIT = 73341000;
     private JProgressBar bar;
+    // stopped ajuda a saber si el limit ha estat sobrepassat
     private boolean stopped;
     
     public Grafica(Main main, JProgressBar bar) {
@@ -32,6 +37,7 @@ public class Grafica extends JPanel {
         this.bar = bar;
         this.currentPoint = 0;
         this.stopped = false;
+        this.maxTime = 1;
     }
     
     public void setN(int n) {
@@ -44,6 +50,8 @@ public class Grafica extends JPanel {
         }
     }
     
+    // metode paint que fa servir la tecnica de doble buffering
+    // uneix els punts dels algorisme, obtenint una grafica
     public void paint(Graphics gr) {
         ConcurrentHashMap<EventType, ArrayList<Long>> llista = main.getModel().getTimes();
         
@@ -63,6 +71,7 @@ public class Grafica extends JPanel {
         Set<EventType> algs = llista.keySet();
 
         int lastPoint = N_PUNTS+1;
+        boolean exceeded = false;
         for(EventType alg : algs){
             long temps = 0;
             g2.setColor(alg.getColor());
@@ -76,20 +85,30 @@ public class Grafica extends JPanel {
             
             for (int i = 0; i < size; i++) {
                 int lastX = transformX(i);
-                int lastY = transformY(i == 0 ? 0 : times.get(i-1), maxTime);
+                int lastY = transformY(i == 0 ? 0 : times.get(i-1), this.maxTime);
 
                 int X = transformX(i+1);
                 temps = times.get(i);
-                int Y = transformY(temps, maxTime);
+                int Y = transformY(temps, this.maxTime);
                 
-                g2.drawLine(lastX, lastY, X, Y);
                 if (temps > TIME_LIMIT && alg.equals(EventType.VECTORIAL)) {
-                    this.stopped = true;
+                    if (!this.stopped) {
+                        exceeded = true;
+                        this.stopped = true;   
+                    }
                     break;
                 }
+                g2.drawLine(lastX, lastY, X, Y);
             }            
         }
         
+        // si el algorisme mes costos supera el limit, es visualitza un missatge
+        if (exceeded) {
+            JOptionPane.showMessageDialog(null, 
+                                  "It will not be drawn, but it is executing in background", 
+                                   "n^2 algorithm exceeds the execution time limit",
+                               JOptionPane.WARNING_MESSAGE);
+        }
         updateProgressBar(lastPoint == N_PUNTS+1 ? 0 : lastPoint);
         
         try {
@@ -100,16 +119,19 @@ public class Grafica extends JPanel {
     }
     
     public void refreshGrafica(VistaEvent event) {
-        if (!this.stopped) {
-            Grafica.maxTime = event.maxTime;
+        if (((event.type.equals(EventType.VECTORIAL) && event.time < TIME_LIMIT && !this.stopped) 
+                || !event.type.equals(EventType.VECTORIAL)) && this.maxTime < event.time) {
+            this.maxTime = event.time;
         }
+
         this.repaint();
     }
     
     public void reset() {
-        Grafica.maxTime = 1;
+        this.maxTime = 1;
         this.currentPoint = 0;
         this.stopped = false;
+
         this.repaint();
     }
     

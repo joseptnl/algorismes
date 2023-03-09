@@ -335,7 +335,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     public void notify(Event e) {
         VistaEvent event = (VistaEvent) e;
         
-        System.out.println(event.type.toString() +" TIME : " + event.time);
+        System.out.println(event.type.toString() + " TIME : " + event.time);
         panelGrafica.refreshGrafica(event);
     }
 

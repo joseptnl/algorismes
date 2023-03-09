@@ -17,8 +17,10 @@ public class Model implements EventListener {
     
     private Main main;
     public int [] vector;
+    // N_PUNTS representa el nombre de punts que voldrem visualitzar
     public final int N_PUNTS = 60, MAX_RANDOM = 100;
     
+    // cada algorisme tindra associada una llista de temps
     private ConcurrentHashMap<EventType, ArrayList<Long>> llistaTime;
     
     public Model(Main main) {
