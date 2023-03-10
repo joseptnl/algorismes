@@ -81,7 +81,7 @@ public class Grafica extends JPanel {
         bar.setValue(this.currentPoint * 10);
         this.currentPoint++;
         try {
-            Thread.sleep(20);
+            Thread.sleep(500);
         } catch (InterruptedException ex) {
             Logger.getLogger(Grafica.class.getName()).log(Level.SEVERE, null, ex);
         }
