@@ -274,6 +274,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     private void buttonArrayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonArrayActionPerformed
         if (!this.alg.contains(EventType.ARRAY)) {
             this.alg.add(EventType.ARRAY);
+            buttonArray.setForeground(EventType.ARRAY.getColor());
             buttonArray.setBackground(new Color(0,102,102).darker());
         }
     }//GEN-LAST:event_buttonArrayActionPerformed
@@ -281,6 +282,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     private void buttonHashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonHashActionPerformed
         if (!this.alg.contains(EventType.HASH)) {
             this.alg.add(EventType.HASH);
+            buttonHash.setForeground(EventType.HASH.getColor());
             buttonHash.setBackground(new Color(0,102,102).darker());
         }
     }//GEN-LAST:event_buttonHashActionPerformed
@@ -288,26 +290,29 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     private void buttonProducteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProducteActionPerformed
         if (!this.alg.contains(EventType.VECTORIAL)) {
             this.alg.add(EventType.VECTORIAL);
+            buttonProducte.setForeground(EventType.VECTORIAL.getColor());
             buttonProducte.setBackground(new Color(0,102,102).darker());
         }
     }//GEN-LAST:event_buttonProducteActionPerformed
 
     private void buttonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonResetActionPerformed
-        /*buttonProducte.setBackground(new Color(0,102,102));
+        buttonProducte.setBackground(new Color(0,102,102));
         buttonArray.setBackground(new Color(0,102,102));
         buttonHash.setBackground(new Color(0,102,102));
-        //this.main.reset();
-        this.main.notify(new ModelEvent());
-        this.main.notify(new ControlEvent(this.alg, false));
         
+        buttonProducte.setForeground(Color.white);
+        buttonArray.setForeground(Color.white);
+        buttonHash.setForeground(Color.white);
+        
+        buttonStart.setEnabled(true);
+        this.main.reset();
         this.alg.clear();
-        panelGrafica.reset();*/
-        //System.exit(0);
-        this.main.notify(new ControlEvent());
+        panelGrafica.reset();
     }//GEN-LAST:event_buttonResetActionPerformed
 
     private void buttonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStartActionPerformed
        if (!this.alg.isEmpty()) {
+           buttonStart.setEnabled(false);
            panelGrafica.setN(this.n);
            this.main.notify(new ModelEvent(this.n));
            this.main.notify(new ControlEvent(this.alg, true));
@@ -320,9 +325,6 @@ public class Vista extends javax.swing.JFrame implements EventListener {
         if (number < 10) {
             this.n = 10;
             nNumber.setValue(10);
-        } else if (number > 999999) {
-            this.n = 999999;
-            nNumber.setValue(999999);
         } else {
             this.n = number;
         }
@@ -333,7 +335,7 @@ public class Vista extends javax.swing.JFrame implements EventListener {
     public void notify(Event e) {
         VistaEvent event = (VistaEvent) e;
         
-        System.out.println(event.type.toString() +" TIME : " + event.time);
+        System.out.println(event.type.toString() + " TIME : " + event.time);
         panelGrafica.refreshGrafica(event);
     }
 

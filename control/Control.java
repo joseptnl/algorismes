@@ -1,10 +1,10 @@
 package practica1.control;
 
+import java.util.ArrayList;
 import practica1.EventType;
 import java.util.Arrays;
 import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Random;
 import practica1.Event;
 import practica1.EventListener;
 import static practica1.EventType.*;
@@ -24,9 +24,6 @@ public class Control extends Thread implements EventListener {
     
     static private boolean[] running;
     static private int[] vector;
-    static private long maxTime = 0;
-    static private int increaseRate;
-    static private long sleepTime;
     
     private int currentIter;
     private Thread[] threadsRef;
@@ -53,16 +50,6 @@ public class Control extends Thread implements EventListener {
         ControlEvent event = (ControlEvent) e;
         
         if (!event.isCorrupt()) {
-            if (event.reset) {
-                for (int i = 0; i < eventTypes.length; i++) {
-                    if (running[i]) {
-                       
-                            threadsRef[i].interrupt(); 
-                        running[i] = false;
-                    }
-                }
-                threadsRef = new Thread[eventTypes.length];
-            } else {
                 if (event.operationType) {
                     for (int i = 0; i < event.types.length; i++) {
                         int eventid = event.types[i].ordinal();
@@ -81,16 +68,12 @@ public class Control extends Thread implements EventListener {
                             if (!running[eventid]) continue;
                             running[eventid] = false;
                         }
-                        //threadsRef[eventid].stop();
-                        //threadsRef[eventid].interrupt();
                         try  
                         {    
                             threadsRef[eventid].interrupt(); 
                         }catch(Exception ex){System.out.println("Exception handled "+ex);}    
                     }
-                }
-            }
-            
+                }            
         }
     }
     
@@ -103,16 +86,39 @@ public class Control extends Thread implements EventListener {
         String threadName = Thread.currentThread().getName();
         EventType threadType = EventType.valueOf(threadName);
         vector = model.vector;
-        increaseRate = vector.length / model.N_PUNTS;
-        sleepTime = model.getSleepTime(); 
         FunctionRef algorithm = null;
+        
+        // feim servir un arrayList per emmagatzemar els valors random pels que farem el calcul
+        // multiplicam per 5 per fer sa mitja de cada 5 punts
+        Random rnd = new Random();
+        ArrayList<Integer> llistaN = new ArrayList<Integer>();
+        for (int i = 0; i < model.N_PUNTS * 5; i++) {
+            llistaN.add(rnd.nextInt(vector.length-10) + 10);
+        }
+        llistaN.sort(null);
         
         switch(threadType) {
             case ARRAY:
-                algorithm = () -> {modaWithArray();};
+                algorithm = () -> {
+                    try {
+                        modaWithArray();
+                    }catch(Exception ex){
+                        System.out.println("Exception handled "+ex);
+                        synchronized (running) {
+                        running[EventType.valueOf(threadName).ordinal()] = false;
+                    }
+                }};
                 break;
             case HASH:
-                algorithm = () -> {modaWithHash();};
+                algorithm = () -> {
+                    try {
+                        modaWithHash();
+                    }catch(Exception ex){
+                        System.out.println("Exception handled "+ex);
+                        synchronized (running) {
+                        running[EventType.valueOf(threadName).ordinal()] = false;
+                    }
+                }};
                 break;
             case VECTORIAL:
                 algorithm = () -> {
@@ -127,20 +133,26 @@ public class Control extends Thread implements EventListener {
                 break;
         }
 
-        long temps;
-        for (int currentLength = 2; currentLength <= model.vector.length; currentLength+=increaseRate) {
-            this.currentIter = currentLength;
+        long temps, mitja = 0;
+        for (int i = 0; i < llistaN.size(); i++) {
+            this.currentIter = llistaN.get(i);
             temps = System.nanoTime();
-            
             algorithm.func();
-            /*if (!running[EventType.valueOf(threadName).ordinal()]) {
-                break;
-            }*/
             temps = System.nanoTime() - temps;
             
-            if (temps > maxTime) maxTime = temps;
-            model.addTime(threadType, temps);
-            main.notify(new VistaEvent(temps, maxTime, EventType.valueOf(threadName)));
+            if (!running[EventType.valueOf(threadName).ordinal()]) {
+                break;
+            }
+            
+            mitja += temps;
+            if ((i+1) % 5 == 0) {
+                // afegim temps mig i notificam la seva visualitzacio
+                mitja /= 5;
+                model.addTime(threadType, mitja);
+                main.notify(new VistaEvent(mitja, EventType.valueOf(threadName)));
+                mitja = 0;
+            }
+            
         }
         
         if (running[EventType.valueOf(threadName).ordinal()]) {
@@ -163,7 +175,7 @@ public class Control extends Thread implements EventListener {
      *  - Compte el nombre d'aparicions consecutives de cada un i establint com
      *  a moda el nombre que més vegades aparegui consecutivament
      */
-    private void modaWithArray() {
+    private void modaWithArray() throws InterruptedException {
         int [] copy = Arrays.copyOf(vector, currentIter);
         Arrays.sort(copy);
        
@@ -213,7 +225,7 @@ public class Control extends Thread implements EventListener {
      *  NOTA: En cada moment emmagatzema quin és la clau amb el valor més alt per 
      *  a l'hora de trobar la moda no haver de recórrer tota l'estructura
      */    
-    private void modaWithHash() {
+    private void modaWithHash() throws InterruptedException {
         Hashtable<Integer,Integer> ht = new Hashtable<Integer,Integer>();
 
         repModa = 0;

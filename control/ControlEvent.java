@@ -10,18 +10,11 @@ import practica1.EventType;
  */
 public class ControlEvent extends Event {
     public EventType[] types;
-    
-    public boolean reset = false;
-    
+        
     public boolean operationType;   // If true means start executions, if false
                                     // means delete execution
              
     private boolean corruptData;
-    
-    public ControlEvent() {
-        super(EventOrigin.Control);
-        this.reset = true;
-    }
     
     public ControlEvent(List<EventType> executiontypes, boolean operationType) {
         super(EventOrigin.Control);
